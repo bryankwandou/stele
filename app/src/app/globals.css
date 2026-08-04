@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+/* Palet kertas dan tinta.
+   Kontras sengaja tidak ekstrem: teks yang dibaca lama lebih nyaman pada
+   putih hangat daripada putih murni. */
+:root {
+  --paper: #fbfaf7;
+  --paper-raised: #ffffff;
+  --ink: #1b1a17;
+  --ink-soft: #6b675e;
+  --rule: #e4e0d7;
+  --accent: #7a5c3e;
+  --accent-soft: #f0e9df;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #14130f;
+    --paper-raised: #1c1a16;
+    --ink: #ece7dc;
+    --ink-soft: #9a9285;
+    --rule: #2e2b25;
+    --accent: #c9a274;
+    --accent-soft: #262119;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Teks perikop. Ukuran dan jarak baris dipilih untuk membaca lama,
+   bukan untuk memadatkan sebanyak mungkin ke dalam layar. */
+.passage {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 1.175rem;
+  line-height: 1.85;
+  max-width: 34rem;
+}
+
+.passage[dir="rtl"] {
+  font-size: 1.4rem;
+  line-height: 2.1;
+}
+
+.verse-number {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+  vertical-align: super;
+  margin-inline-end: 0.3rem;
+  user-select: none;
+}
+
+/* Tombol dompet bawaan adapter memakai gaya ungu yang tidak cocok dengan
+   halaman ini. Ditimpa seperlunya, tanpa mengubah perilakunya. */
+.wallet-adapter-button-trigger {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+  font-family: var(--font-sans), sans-serif !important;
+  font-size: 0.8rem !important;
+  height: 2.25rem !important;
+  line-height: 2.25rem !important;
+  border-radius: 0.375rem !important;
+  padding: 0 0.9rem !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
