@@ -1,0 +1,32 @@
+# Kunci penandatangan dan kunci deploy. Tidak boleh menyentuh repositori mana pun.
+.keys/
+*.pem
+*keypair*.json
+attestor*.json
+deployer*.json
+
+# Rahasia lingkungan
+.env
+.env.local
+.env.*.local
+
+# Sisa alat bantu
+_git_scaffold_backup/
+
+# Dependensi dan hasil build
+node_modules/
+.next/
+out/
+build/
+dist/
+target/
+.anchor/
+test-ledger/
+
+# Berkas sistem dan editor
+.DS_Store
+Thumbs.db
+*.swp
+.vercel
+*.tsbuildinfo
+next-env.d.ts
