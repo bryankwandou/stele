@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 64" width="260" height="64" role="img" aria-labelledby="steleWordmarkTitle">
+  <title id="steleWordmarkTitle">Stele</title>
+
+  <defs>
+    <linearGradient id="wmStone" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0"    stop-color="#F2ECDF"/>
+      <stop offset="0.52" stop-color="#DFD3BC"/>
+      <stop offset="1"    stop-color="#C2B49A"/>
+    </linearGradient>
+    <linearGradient id="wmEdge" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0"    stop-color="#000000" stop-opacity="0"/>
+      <stop offset="0.78" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="1"    stop-color="#4A3F2C" stop-opacity="0.20"/>
+    </linearGradient>
+    <clipPath id="wmSlab">
+      <path d="M8 57 V22 a10.5 10.5 0 0 1 21 0 V57 Z"/>
+    </clipPath>
+  </defs>
+
+  <ellipse cx="18.5" cy="57.4" rx="14.5" ry="1.7" fill="#4A3F2C" opacity="0.16"/>
+  <path d="M8 57 V22 a10.5 10.5 0 0 1 21 0 V57 Z" fill="url(#wmStone)"/>
+  <path d="M8 57 V22 a10.5 10.5 0 0 1 21 0 V57 Z" fill="url(#wmEdge)"/>
+  <path d="M8 57 V22 a10.5 10.5 0 0 1 21 0 V57 Z" fill="none" stroke="#8A7A5E" stroke-opacity="0.55" stroke-width="1"/>
+
+  <g clip-path="url(#wmSlab)" stroke-linecap="round">
+    <g stroke="#FFFFFF" stroke-opacity="0.55" transform="translate(0 0.95)">
+      <line x1="13" y1="29" x2="24" y2="29" stroke-width="1.9"/>
+      <line x1="13" y1="35.5" x2="24" y2="35.5" stroke-width="1.9"/>
+      <line x1="13" y1="42" x2="24" y2="42" stroke-width="1.9"/>
+      <line x1="13" y1="48.5" x2="19.5" y2="48.5" stroke-width="1.9"/>
+    </g>
+    <g stroke="#6B5C42" stroke-opacity="0.78">
+      <line x1="13" y1="29" x2="24" y2="29" stroke-width="1.9"/>
+      <line x1="13" y1="35.5" x2="24" y2="35.5" stroke-width="1.9"/>
+      <line x1="13" y1="42" x2="24" y2="42" stroke-width="1.9"/>
+    </g>
+    <line x1="13" y1="48.5" x2="19.5" y2="48.5" stroke="#B5502A" stroke-width="1.9"/>
+  </g>
+
+  <!-- Untuk pemakaian di web, fonta serif proyek sudah dimuat halaman sehingga
+       teks ini tampil sebagaimana mestinya. Untuk cetak atau kiriman ke pihak
+       luar, ubah dulu jadi kurva agar tidak bergantung pada fonta terpasang. -->
+  <text x="46" y="47" font-family="'Source Serif 4','Source Serif Pro',Georgia,serif"
+        font-size="38" font-weight="600" letter-spacing="1.5" fill="#1B1A17">Stele</text>
+</svg>

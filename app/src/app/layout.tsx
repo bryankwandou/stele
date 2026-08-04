@@ -22,6 +22,7 @@ export const metadata: Metadata = {
   title: "Stele — catatan atas bacaan Anda",
   description:
     "Membaca teks suci dari beberapa tradisi, dengan catatan yang tersimpan di Solana devnet.",
+  icons: { icon: "/mark.svg" },
 };
 
 const NAV = [
@@ -41,7 +42,14 @@ export default function RootLayout({
         <Providers>
           <header className="border-b border-rule">
             <div className="mx-auto flex w-full max-w-5xl items-center gap-6 px-6 py-4">
-              <Link href="/" className="font-serif text-xl tracking-tight">
+              <Link
+                href="/"
+                className="flex shrink-0 items-center gap-2 font-serif text-xl tracking-tight"
+              >
+                {/* Lambang dimuat sebagai gambar, bukan disisipkan sebagai SVG
+                    sebaris, supaya peramban bisa menyinggahkannya sekali dan
+                    memakainya ulang di setiap halaman. */}
+                <img src="/mark.svg" alt="" width={26} height={26} aria-hidden />
                 Stele
               </Link>
               <nav className="flex flex-1 flex-wrap gap-5 text-sm text-ink-soft">
