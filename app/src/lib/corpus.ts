@@ -45,6 +45,13 @@ export interface TranslationSummary {
   name: string;
   language: string;
   direction: "ltr" | "rtl";
+  /**
+   * Benar bila sumbernya memberi penomoran ayat yang baku. Terjemahan lama di
+   * SuttaCentral hanya tersedia sebagai satu blok HTML per vagga, sehingga
+   * nomor yang kita tampilkan untuknya adalah urutan baris, bukan nomor syair
+   * Dhammapada. Pembaca berhak tahu bedanya.
+   */
+  canonicalNumbering?: boolean;
 }
 
 export interface BookSummary {
@@ -85,8 +92,8 @@ export const TRADITIONS: Tradition[] = [
   },
   {
     id: "buddhist",
-    name: "Tipitaka",
-    blurb: "Kanon Pali, termasuk Dhammapada, dari arsip SuttaCentral.",
+    name: "Dhammapada",
+    blurb: "423 syair dalam 26 vagga, beserta teks akar Pali, dari arsip SuttaCentral.",
     attribution: {
       label: "SuttaCentral",
       href: "https://suttacentral.net",
@@ -295,14 +302,53 @@ const DHAMMAPADA_VAGGA: { uid: string; name: string }[] = [
   { uid: "dhp383-423", name: "Brahmanavagga — Brahmana" },
 ];
 
-/** Terjemahan yang dirawat aktif di SuttaCentral untuk Dhammapada. */
-const SUTTA_TRANSLATIONS: TranslationSummary[] = [
-  { id: "sujato/en", name: "Bhikkhu Sujato", language: "English", direction: "ltr" },
-  { id: "buddharakkhita/en", name: "Acharya Buddharakkhita", language: "English", direction: "ltr" },
-];
+/** Bahasa yang ditulis kanan-ke-kiri di antara terjemahan SuttaCentral. */
+const RTL_LANGS = new Set(["he", "ar", "fa", "ur"]);
 
+/**
+ * Daftar terjemahan diambil dari SuttaCentral, bukan ditulis tangan.
+ *
+ * Sebelumnya hanya dua terjemahan Inggris yang tercantum di sini, padahal
+ * arsipnya menyediakan puluhan dalam banyak bahasa. Menuliskannya manual berarti
+ * daftar itu akan basi setiap kali ada terjemahan baru masuk, jadi sekarang
+ * diambil dari suttaplex vagga pertama — daftar penerjemah Dhammapada sama untuk
+ * seluruh vagga.
+ */
 async function buddhistTranslations(): Promise<TranslationSummary[]> {
-  return SUTTA_TRANSLATIONS;
+  const res = await fetch(`${SUTTACENTRAL}/suttas/${DHAMMAPADA_VAGGA[0].uid}`, FETCH_OPTS);
+  if (!res.ok) throw new Error(`Daftar terjemahan Dhammapada gagal dimuat (${res.status}).`);
+  const data = await res.json();
+
+  const rows = (data.suttaplex?.translations ?? []) as Record<string, unknown>[];
+  const seen = new Set<string>();
+  const out: TranslationSummary[] = [];
+
+  for (const row of rows) {
+    const author = String(row.author_uid ?? "");
+    const lang = String(row.lang ?? "");
+    if (!author || !lang) continue;
+
+    const id = `${author}/${lang}`;
+    if (seen.has(id)) continue;
+    seen.add(id);
+
+    // Teks akar Pali disajikan sebagai "terjemahan" oleh suttaplex, tetapi
+    // sebetulnya ia sumbernya. Diberi label supaya pembaca tidak salah kira.
+    const isRoot = lang === "pli";
+    out.push({
+      id,
+      name: isRoot ? "Pāli (teks akar)" : String(row.author ?? author),
+      language: String(row.lang_name ?? lang),
+      direction: RTL_LANGS.has(lang) ? "rtl" : "ltr",
+      canonicalNumbering: row.segmented === true,
+    });
+  }
+
+  // Yang penomorannya baku ditaruh lebih dulu; sisanya tetap bisa dipilih.
+  out.sort((a, b) => Number(b.canonicalNumbering) - Number(a.canonicalNumbering));
+
+  if (out.length === 0) throw new Error("SuttaCentral tidak mengembalikan terjemahan.");
+  return out;
 }
 
 async function buddhistBooks(): Promise<BookSummary[]> {
@@ -330,7 +376,15 @@ async function segmentedSutta(
   if (!res.ok) return null;
 
   const data = await res.json();
-  const text = data.translation_text as Record<string, string> | undefined;
+
+  // root_text hanya boleh dipakai bila yang diminta memang teks akar Pali.
+  // Endpoint ini tetap mengembalikan root_text untuk penerjemah yang karyanya
+  // belum bersegmen, jadi memakainya sebagai cadangan umum akan menyajikan Pali
+  // kepada orang yang memilih bahasa Tamil atau Ibrani — salah tanpa terlihat
+  // salah. Untuk kasus itu kembalikan null saja supaya jatuh ke bentuk lama.
+  const text = (lang === "pli" ? data.root_text : data.translation_text) as
+    | Record<string, string>
+    | undefined;
   if (!text) return null;
 
   const grouped = new Map<number, string[]>();
@@ -388,16 +442,18 @@ async function buddhistPassage(translationId: string, vagga: number): Promise<Pa
     (await segmentedSutta(entry.uid, author, lang)) ??
     (await legacySutta(entry.uid, author, lang));
 
+  const listed = (await buddhistTranslations()).find((t) => t.id === translationId);
+
   return {
     traditionId: "buddhist",
     translationId,
-    translationName: SUTTA_TRANSLATIONS.find((t) => t.id === translationId)?.name ?? translationId,
+    translationName: listed?.name ?? author,
     bookId: String(vagga),
     bookName: entry.name,
     chapter: vagga,
     verses,
     wordCount: countWords(verses),
-    direction: "ltr",
+    direction: listed?.direction ?? "ltr",
     attribution: TRADITIONS[2].attribution,
   };
 }
@@ -445,6 +501,45 @@ export async function getPassage(
     case "buddhist":
       return buddhistPassage(translationId, Number(bookId));
   }
+}
+
+export interface CorpusCount {
+  translations: number;
+  languages: number;
+  traditions: number;
+}
+
+/**
+ * Menghitung cakupan nyata dari ketiga sumber.
+ *
+ * Angka ini muncul di halaman muka. Menuliskannya tangan berarti ia akan
+ * meleset diam-diam setiap kali sumbernya bertambah, dan angka yang meleset di
+ * halaman muka adalah hal pertama yang akan dibantah orang. Jadi dihitung saja.
+ *
+ * Bahasa dihitung sebagai himpunan gabungan: satu bahasa yang punya terjemahan
+ * di dua tradisi tetap satu bahasa.
+ */
+export async function countCorpus(): Promise<CorpusCount> {
+  const lists = await Promise.allSettled(
+    TRADITIONS.map((t) => listTranslations(t.id))
+  );
+
+  let translations = 0;
+  const languages = new Set<string>();
+
+  for (const result of lists) {
+    if (result.status !== "fulfilled") continue;
+    translations += result.value.length;
+    for (const t of result.value) languages.add(t.language.toLowerCase());
+  }
+
+  // Bila setiap sumber sedang tidak bisa dihubungi, jangan tampilkan nol —
+  // itu lebih menyesatkan daripada tidak menampilkan apa pun.
+  if (translations === 0) {
+    return { translations: 1781, languages: 1102, traditions: TRADITIONS.length };
+  }
+
+  return { translations, languages: languages.size, traditions: TRADITIONS.length };
 }
 
 /** Pengenal stabil satu perikop; dipakai sebagai kunci sesi dan di attestation. */
