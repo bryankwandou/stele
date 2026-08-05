@@ -83,6 +83,7 @@ export function Picker({
     };
   }, [tradition, translationId]);
 
+  const selectedTranslation = inLanguage.find((t) => t.id === translationId);
   const selectedBook = books.find((b) => b.id === bookId);
   const maxChapter = selectedBook?.chapters ?? 1;
   const ready = Boolean(translationId && bookId);
@@ -129,6 +130,14 @@ export function Picker({
             ))}
           </select>
         </label>
+
+        {selectedTranslation?.canonicalNumbering === false && (
+          <p className="text-xs leading-relaxed text-ink-soft sm:col-span-2">
+            Arsip menyimpan terjemahan ini sebagai satu blok utuh per vagga, bukan
+            per syair. Nomor di samping baris adalah urutan tampil, bukan nomor
+            syair Dhammapada. Terjemahan di urutan atas daftar punya penomoran baku.
+          </p>
+        )}
 
         <label className="space-y-1.5">
           <span className="text-sm text-ink-soft">
