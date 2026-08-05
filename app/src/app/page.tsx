@@ -86,6 +86,32 @@ export default async function HomePage() {
         </div>
       </section></Reveal>
 
+      <Reveal><section className="max-w-2xl space-y-8">
+        <h2 className="font-serif text-2xl">Kenapa harus di rantai</h2>
+        <div className="space-y-5 leading-relaxed text-ink-soft">
+          <p>
+            Pertanyaan yang wajar, dan jawaban yang biasa diberikan tidak cukup
+            baik. Catatan bacaan tidak sedang terancam sensor. Tidak ada yang
+            berniat memindahkan riwayat devosinya ke aplikasi lain. Untuk sekadar
+            menyimpan, satu baris di basis data sudah selesai dan jauh lebih murah.
+          </p>
+          <p>
+            Alasannya bukan soal permanen. Alasannya adalah kami sendiri tidak
+            bisa berbohong. Sebuah aplikasi yang mencatat kesalehan penggunanya
+            punya alasan kuat untuk membesarkan angkanya sendiri, dan Anda tidak
+            punya cara memeriksanya. Di sini catatan hanya lahir dari pernyataan
+            64 byte yang ditandatangani kunci penilai lalu diperiksa program
+            on-chain. Kami tidak punya jalan untuk menerbitkan catatan yang tidak
+            lolos penilaian kami sendiri, dan plafon tiga per hari ditegakkan di
+            tempat yang tidak bisa kami ubah diam-diam.
+          </p>
+          <p>
+            Rantai di sini bukan supaya Anda tidak perlu percaya negara. Ia supaya
+            Anda tidak perlu percaya kami.
+          </p>
+        </div>
+      </section></Reveal>
+
       <Reveal><section className="max-w-2xl space-y-6">
         <h2 className="font-serif text-2xl">Yang tidak kami klaim</h2>
         <div className="space-y-5 leading-relaxed text-ink-soft">
