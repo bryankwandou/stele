@@ -8,9 +8,12 @@ skip-lint = false
 [programs.localnet]
 stele_onchain = "B7iJ9rGP5jPFx3XmWPPAxgvxrv2SvVLRuKNq16iUJWKK"
 
+[programs.devnet]
+stele_onchain = "B7iJ9rGP5jPFx3XmWPPAxgvxrv2SvVLRuKNq16iUJWKK"
+
 [provider]
-cluster = "localnet"
-wallet = '~\.config\solana\id.json'
+cluster = "devnet"
+wallet = '~\.config\solana\veztra-deploy.json'
 
 [scripts]
 test = "cargo test"

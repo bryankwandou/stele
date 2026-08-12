@@ -206,7 +206,9 @@ export function Reader({ passage }: { passage: Passage }) {
 
       <article className="passage space-y-4" dir={passage.direction}>
         {passage.verses.map((verse) => (
-          <p key={verse.n}>
+          // `data-ayat` membuat tiap ayat bisa dirujuk dari luar — dipakai
+          // tautan ke ayat tertentu dan oleh skrip bukti di scripts/.
+          <p key={verse.n} id={`ayat-${verse.n}`} data-ayat={verse.n}>
             <span className="verse-number">{verse.n}</span>
             {verse.text}
           </p>
