@@ -67,23 +67,36 @@ membobol server pun tidak melewati plafon.
 
 ## Keadaan sekarang
 
-Bagian yang belum jalan disebut di sini, bukan disimpan sampai sesi tanya jawab.
-
 | Bagian | Keadaan | Bukti |
 |---|---|---|
 | Enam halaman produksi | Jalan | Seluruhnya menjawab 200 |
 | Korpus tiga tradisi | Jalan | 1.781 terjemahan, dihitung dari sumbernya |
 | Penilaian sesi dan pertanyaan jangkar | Jalan | Menulis ke Postgres dari Vercel |
 | Penandatanganan attestation | Jalan | Tanda tangan sah terhadap tata byte yang diperiksa program |
-| Program Anchor | Tersusun | Belum digelar |
-| Penggelaran devnet | **Belum** | Dompet penggelar 0 SOL; faucet menolak berulang kali |
-| Pencetakan on-chain | **Belum** | Menunggu penggelaran di atas |
+| Program Anchor di devnet | Jalan | [`B7iJ9rGP…`](https://explorer.solana.com/address/B7iJ9rGP5jPFx3XmWPPAxgvxrv2SvVLRuKNq16iUJWKK?cluster=devnet) |
+| Mint \$STL, otoritas di PDA | Jalan | [`6jLXArDF…`](https://explorer.solana.com/address/6jLXArDFsvzdDEWaAyHaJ8HB2fAqWGmW6AHV1Sg7rCzY?cluster=devnet) |
+| Pencetakan on-chain | Jalan | Delapan percobaan, [`docs/BUKTI.md`](BUKTI.md) |
 
-Dua perintah tersisa setelah dompet penggelar terisi:
+### Yang diuji di rantai, bukan diklaim
+
+`app/scripts/prove-chain.mjs` membuat dompet baru setiap kali dijalankan, lalu
+melancarkan tujuh serangan terhadap program yang sudah digelar. Nama galat di
+kolom kanan diambil dari log runtime, bukan ditulis ulang oleh kami.
+
+| Percobaan | Ditolak dengan |
+|---|---|
+| Nonce dipakai ulang | PDA nonce sudah terpakai |
+| Ditandatangani kunci lain | `UnknownAttestor` |
+| Jumlah dinaikkan diam-diam | `AttestationMismatch` |
+| Jumlah dinaikkan lewat plafon | `RewardOutOfRange` |
+| Attestation kedaluwarsa | `AttestationExpired` |
+| Attestation dompet lain | `AttestationMismatch` |
+| Klaim keempat pada hari sama | `DailyCapReached` |
+
+Dompet uji berakhir dengan 0,3 \$STL — tiga klaim sah, bukan sepuluh.
 
 ```bash
-cd onchain && anchor deploy --provider.cluster devnet
-cd ../app && node scripts/init-chain.mjs
+cd app && node scripts/prove-chain.mjs   # menulis ulang docs/BUKTI.md
 ```
 
 ## Pertanyaan yang wajar ditanyakan
@@ -113,4 +126,6 @@ seluruh alasan produk ini ada akan runtuh.
 
 - Aplikasi — https://stele-gamma.vercel.app
 - Repositori — https://github.com/VincentiusBryanKwandou/stele
+- Program di devnet — https://explorer.solana.com/address/B7iJ9rGP5jPFx3XmWPPAxgvxrv2SvVLRuKNq16iUJWKK?cluster=devnet
+- Bukti delapan percobaan di rantai — [`docs/BUKTI.md`](BUKTI.md)
 - Audit lawan atas ide ini — [`docs/AUDIT.md`](AUDIT.md)
