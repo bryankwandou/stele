@@ -125,7 +125,7 @@ seluruh alasan produk ini ada akan runtuh.
 ## Pranala
 
 - Aplikasi — https://stele-gamma.vercel.app
-- Repositori — https://github.com/VincentiusBryanKwandou/stele
+- Repositori — https://github.com/bryankwandou/stele
 - Program di devnet — https://explorer.solana.com/address/B7iJ9rGP5jPFx3XmWPPAxgvxrv2SvVLRuKNq16iUJWKK?cluster=devnet
 - Bukti delapan percobaan di rantai — [`docs/BUKTI.md`](BUKTI.md)
 - Audit lawan atas ide ini — [`docs/AUDIT.md`](AUDIT.md)

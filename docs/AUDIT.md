@@ -151,19 +151,69 @@ atau menyelesaikan satu kitab utuh.
 
 ## Ringkas
 
-| Kelemahan | Berat | Bisa diperbaiki sebelum submit |
+| Kelemahan | Berat | Keadaan |
 |---|---|---|
-| Argumen "kenapa rantai" belum dipakai yang benar | Fatal | Ya, ini soal kalimat |
-| Papan peringkat melawan tesis sendiri | Berat | Ya, hapus dari navigasi |
-| Dompet diminta terlalu awal | Berat | Ya |
-| Tidak ada model pendapatan | Berat | Tidak, ini soal strategi |
-| Nilai sebenarnya ada di korpus, bukan attestation | Berat | Ya, ini soal posisi |
-| Ketergantungan API tanpa cadangan | Sedang | Sebagian |
-| Pemeriksaan digambarkan terlalu kuat | Sedang | Ya |
-| Netralitas melemahkan distribusi | Sedang | Tidak |
-| Plafon memotong pengguna terbaik | Ringan | Tidak sekarang |
+| Argumen "kenapa rantai" belum dipakai yang benar | Fatal | Diperbaiki |
+| Papan peringkat melawan tesis sendiri | Berat | Diperbaiki |
+| Dompet diminta terlalu awal | Berat | Diperbaiki |
+| Tidak ada model pendapatan | Berat | Terbuka |
+| Nilai sebenarnya ada di korpus, bukan attestation | Berat | Sebagian |
+| Ketergantungan API tanpa cadangan | Sedang | Terbuka |
+| Pemeriksaan digambarkan terlalu kuat | Sedang | Diperbaiki |
+| Netralitas melemahkan distribusi | Sedang | Terbuka |
+| Plafon memotong pengguna terbaik | Ringan | Terbuka |
 
-Tiga hal pertama bisa dikerjakan dalam hitungan jam dan mengubah paling banyak.
-Sisanya jujur disebut sebagai keterbatasan yang diketahui, karena juri lebih
-menghargai orang yang tahu letak lubang di produknya sendiri daripada orang yang
-mengaku tidak punya.
+---
+
+## Yang berubah setelah audit ini ditulis
+
+**1 — argumen rantai.** Bagian "Kenapa harus di rantai" sekarang jadi blok kedua
+di halaman muka, sebelum penjelasan fitur apa pun. Kalimatnya persis argumen di
+poin 1: bukan supaya pengguna tidak perlu percaya negara, melainkan supaya tidak
+perlu percaya kami.
+
+Sejak itu argumennya tidak lagi berhenti sebagai kalimat. Program sudah digelar
+di devnet, dan `app/scripts/prove-chain.mjs` melancarkan tujuh serangan
+terhadapnya — termasuk mencoba menandatangani attestation dengan kunci sendiri
+dan menaikkan jumlah setelah pesan ditandatangani. Ketujuhnya ditolak dengan
+nama galat yang bisa dibaca di `docs/BUKTI.md`. Klaim "kami tidak mampu
+berbohong" kini punya berkas yang membuktikannya, bukan hanya menyatakannya.
+
+**2 — papan peringkat.** Tidak dihapus, tetapi dibalik maksudnya. Halaman
+sekarang dibuka oleh angka agregat seluruh arsip, dan salah satu dari empat
+angka itu adalah jumlah sesi yang ditutup **tanpa** dicatat. Memasang angka
+kegagalan sendiri di tempat yang paling terbaca mengubah halaman dari papan
+skor menjadi laporan keadaan.
+
+Peringkat beruntun tetap ada karena beruntun adalah satu-satunya kolom yang
+tidak bisa dipercepat: plafon harian membuat semua kolom berbasis volume mentok
+di angka yang sama. Alamat dipendekkan, tanpa nama dan tanpa foto. Keberatan
+Matius 6:1 di poin 2 tetap berlaku dan tidak hilang oleh perubahan ini —
+menaruhnya di navigasi utama masih keputusan yang bisa digugat.
+
+**3 — dompet.** Halaman bacaan dirender di server dan tidak pernah menunggu
+dompet. Tanpa dompet tersambung, perikopnya tetap tampil utuh, dengan satu
+kalimat yang menyebutkan bahwa dompet hanya diperlukan bila pembaca ingin
+bacaannya tercatat.
+
+**7 — cara menggambarkan pemeriksaan.** Kata "berlapis" dibuang dari halaman
+muka dan berkas pengajuan. Yang tertulis sekarang: pertanyaan jangkar bisa
+dijawab model bahasa dalam waktu di bawah satu detik, dan yang benar-benar
+bekerja adalah plafonnya.
+
+## Yang masih terbuka, dan tidak ditutupi
+
+**4 — pendapatan.** Belum terjawab. Menyebut arah yang paling masuk akal
+(membuka lapisan korpus sebagai infrastruktur) bukan model pendapatan; itu baru
+hipotesis tanpa satu pun pelanggan.
+
+**5 — posisi.** Korpus sudah disebut sebagai aset di berkas pengajuan, tetapi
+belum ada endpoint publik yang bisa dipakai pengembang lain. Sampai itu ada,
+poin ini baru setengah dikerjakan.
+
+**6 — ketergantungan API.** Masih tanpa cadangan. Bila `bible.helloao.org` mati,
+sebagian besar korpus ikut hilang.
+
+**8 dan 9 — netralitas dan plafon.** Keduanya konsekuensi dari keputusan yang
+disengaja, bukan cacat yang lupa diperbaiki. Disebut di sini supaya tidak perlu
+ditemukan orang lain.
