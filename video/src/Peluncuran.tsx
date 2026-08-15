@@ -1,6 +1,6 @@
 import React from "react";
 import { AbsoluteFill, Sequence, interpolate, useCurrentFrame } from "remotion";
-import { Angka, Judul, Kening, Latar, Lempeng, Naik, Tubuh } from "./bagian";
+import { Angka, Judul, Kening, Latar, Lempeng, Naik, Tolakan, Tubuh } from "./bagian";
 import { ADEGAN, HURUF, WARNA } from "./teater";
 
 /**
@@ -85,6 +85,29 @@ const Rantai: React.FC = () => (
         penilai, lalu diperiksa program on-chain. Kami tidak punya jalan untuk
         menerbitkan catatan yang tidak lolos penilaian kami sendiri.
       </Tubuh>
+    </Latar>
+  </Adegan>
+);
+
+const Bukti: React.FC = () => (
+  <Adegan panjang={ADEGAN.bukti}>
+    <Latar>
+      <Kening>Bukan didemokan — diserang</Kening>
+      <Judul ukuran={58}>
+        Tujuh cara memalsukan catatan, dan apa yang program jawab.
+      </Judul>
+      <Tolakan
+        mulai={22}
+        baris={[
+          { serangan: "Attestation yang sama dipakai ulang", galat: "nonce sudah terpakai" },
+          { serangan: "Ditandatangani kunci sendiri", galat: "UnknownAttestor" },
+          { serangan: "Jumlah dinaikkan diam-diam", galat: "AttestationMismatch" },
+          { serangan: "Jumlah dinaikkan lewat plafon", galat: "RewardOutOfRange" },
+          { serangan: "Attestation yang sudah kedaluwarsa", galat: "AttestationExpired" },
+          { serangan: "Attestation milik dompet lain", galat: "AttestationMismatch" },
+          { serangan: "Klaim keempat pada hari yang sama", galat: "DailyCapReached" },
+        ]}
+      />
     </Latar>
   </Adegan>
 );
@@ -175,6 +198,7 @@ export const Peluncuran: React.FC = () => {
     ["masalah", Masalah],
     ["balik", Balik],
     ["rantai", Rantai],
+    ["bukti", Bukti],
     ["cakupan", Cakupan],
     ["plafon", Plafon],
     ["penutup", Penutup],

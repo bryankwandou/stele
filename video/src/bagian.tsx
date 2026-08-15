@@ -193,6 +193,79 @@ export const Lempeng: React.FC<{ mulai?: number; skala?: number }> = ({
   );
 };
 
+/**
+ * Daftar serangan yang ditolak program, muncul satu per satu.
+ *
+ * Nama galat di kanan adalah yang benar-benar dilemparkan runtime Solana, jadi
+ * baris ini bukan ilustrasi. Garis coret ditarik setelah barisnya tampil —
+ * urutannya penting, sebab yang ingin terbaca adalah percobaan dulu, baru
+ * penolakannya.
+ */
+export const Tolakan: React.FC<{
+  baris: { serangan: string; galat: string }[];
+  mulai?: number;
+  jeda?: number;
+}> = ({ baris, mulai = 0, jeda = 16 }) => {
+  const frame = useCurrentFrame();
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 34 }}>
+      {baris.map((b, i) => {
+        const awal = mulai + i * jeda;
+        const muncul = interpolate(frame - awal, [0, 12], [0, 1], {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+        });
+        const coret = interpolate(frame - awal, [10, 26], [0, 1], {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+        });
+
+        return (
+          <div
+            key={b.serangan}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 460px",
+              gap: 40,
+              alignItems: "baseline",
+              padding: "15px 0",
+              borderBottom: `1px solid ${WARNA.pahat}22`,
+              opacity: muncul,
+              transform: `translateY(${interpolate(muncul, [0, 1], [10, 0])}px)`,
+            }}
+          >
+            <div style={{ position: "relative", fontSize: 31, color: WARNA.tinta }}>
+              {b.serangan}
+              <div
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  top: "54%",
+                  height: 2,
+                  width: `${coret * 100}%`,
+                  background: WARNA.tanah,
+                  opacity: 0.72,
+                }}
+              />
+            </div>
+            <div
+              style={{
+                fontFamily: HURUF.angka,
+                fontSize: 25,
+                color: WARNA.tanah,
+                opacity: coret,
+              }}
+            >
+              {b.galat}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 /** Angka yang naik dari nol lalu berhenti sendiri. */
 export const Angka: React.FC<{ nilai: number; mulai?: number }> = ({
   nilai,
