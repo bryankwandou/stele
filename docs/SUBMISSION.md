@@ -127,5 +127,21 @@ seluruh alasan produk ini ada akan runtuh.
 - Aplikasi — https://stele-gamma.vercel.app
 - Repositori — https://github.com/bryankwandou/stele
 - Program di devnet — https://explorer.solana.com/address/B7iJ9rGP5jPFx3XmWPPAxgvxrv2SvVLRuKNq16iUJWKK?cluster=devnet
+- Mint \$STL — https://explorer.solana.com/address/6jLXArDFsvzdDEWaAyHaJ8HB2fAqWGmW6AHV1Sg7rCzY?cluster=devnet
+- Pitch deck — https://claude.ai/code/artifact/bf448e25-3685-444d-8abe-0c383c24e7c2
+- Video peluncuran — `video/out/stele.mp4`, disusun dari kode di `video/src`
 - Bukti delapan percobaan di rantai — [`docs/BUKTI.md`](BUKTI.md)
+- Bukti jalur lengkap dari situs produksi — [`docs/BUKTI-LIVE.md`](BUKTI-LIVE.md)
 - Audit lawan atas ide ini — [`docs/AUDIT.md`](AUDIT.md)
+
+## Kalau juri hanya punya dua menit
+
+Buka [`docs/BUKTI.md`](BUKTI.md). Berkas itu ditulis oleh skrip, bukan tangan,
+dan isinya tujuh cara memalsukan catatan beserta nama galat yang dilemparkan
+program ketika masing-masing dicoba. Semua tautan di dalamnya mengarah ke
+transaksi devnet yang bisa dibuka sekarang.
+
+Sesudahnya, [`docs/AUDIT.md`](AUDIT.md) memuat sembilan keberatan terhadap produk
+ini yang kami tulis sendiri, empat di antaranya sudah ditutup dan lima masih
+terbuka. Bagian yang belum terjawab — terutama model pendapatan — disebut di
+sana, bukan disimpan sampai sesi tanya jawab.

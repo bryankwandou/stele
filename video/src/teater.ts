@@ -30,6 +30,10 @@ export const ADEGAN = {
   masalah: 5 * FPS,
   balik: 5 * FPS,
   rantai: 6 * FPS,
+  // Adegan terpanjang, dan sengaja. Tujuh baris yang muncul satu per satu
+  // butuh waktu untuk terbaca; memotongnya akan membuat bagian yang paling
+  // membuktikan justru jadi yang paling terburu-buru.
+  bukti: 9 * FPS,
   cakupan: 5 * FPS,
   plafon: 5 * FPS,
   penutup: 4 * FPS,
