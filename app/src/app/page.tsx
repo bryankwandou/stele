@@ -1,19 +1,27 @@
-﻿import Link from "next/link";
+import Link from "next/link";
+
 import { countCorpus } from "@/lib/corpus";
+import { copy } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
 import { Carving } from "@/components/Carving";
 import { Reveal } from "@/components/Reveal";
 import { Tally } from "@/components/Tally";
 
-/** Dihitung ulang setiap jam dari sumbernya, bukan ditulis tangan. */
-export const revalidate = 3600;
-
+/**
+ * Halaman ini dirender per permintaan karena bahasa dibaca dari kuki. Angka
+ * korpusnya sendiri tetap disinggahkan satu jam di lapisan fetch, jadi yang
+ * dikerjakan ulang hanya penyusunan HTML, bukan pemanggilan ketiga arsip.
+ */
 export default async function HomePage() {
+  const locale = await getLocale();
+  const c = copy(locale);
   const corpus = await countCorpus();
-  const FACTS = [
-    { label: "Terjemahan", value: corpus.translations },
-    { label: "Bahasa", value: corpus.languages },
-    { label: "Tradisi", value: corpus.traditions },
-    { label: "Plafon harian", value: 3 },
+
+  const facts = [
+    { label: c.home.factTranslations, value: corpus.translations },
+    { label: c.home.factLanguages, value: corpus.languages },
+    { label: c.home.factTraditions, value: corpus.traditions },
+    { label: c.home.factCap, value: 3 },
   ];
 
   return (
@@ -21,29 +29,25 @@ export default async function HomePage() {
       <section className="grid items-center gap-12 sm:grid-cols-[1fr_auto]">
         <Reveal className="max-w-2xl">
           <p className="text-sm uppercase tracking-[0.18em] text-ink-soft">
-            Solana devnet
+            {c.home.eyebrow}
           </p>
           <h1 className="mt-4 font-serif text-4xl leading-tight sm:text-5xl">
-            Bacaan Anda meninggalkan catatan yang tidak bisa dihapus siapa pun.
+            {c.home.title}
           </h1>
-          <p className="mt-6 text-lg leading-relaxed text-ink-soft">
-            Stele bukan aplikasi yang membayar Anda membaca. Yang dicatat adalah
-            bahwa Anda membaca — hari demi hari, di rantai publik, dalam bentuk yang
-            tidak bisa dipalsukan dan tidak bisa dibeli.
-          </p>
+          <p className="mt-6 text-lg leading-relaxed text-ink-soft">{c.home.lede}</p>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/read"
               className="rounded-md bg-ink px-5 py-2.5 text-sm text-paper transition-opacity hover:opacity-90"
             >
-              Mulai membaca
+              {c.home.ctaRead}
             </Link>
             <Link
               href="/how-it-works"
               className="rounded-md border border-rule px-5 py-2.5 text-sm transition-colors hover:border-ink"
             >
-              Cara kerjanya
+              {c.home.ctaHow}
             </Link>
           </div>
         </Reveal>
@@ -54,7 +58,7 @@ export default async function HomePage() {
       </section>
 
       <section className="grid gap-x-8 gap-y-6 border-y border-rule py-8 sm:grid-cols-4">
-        {FACTS.map((fact, i) => (
+        {facts.map((fact, i) => (
           <Reveal key={fact.label} delay={i * 90}>
             <div className="font-serif text-3xl">
               <Tally value={fact.value} />
@@ -64,82 +68,47 @@ export default async function HomePage() {
         ))}
       </section>
 
-      <Reveal><section className="max-w-2xl space-y-8">
-        <h2 className="font-serif text-2xl">Kenapa bukan hadiah</h2>
-        <div className="space-y-5 leading-relaxed text-ink-soft">
-          <p>
-            Pernah ada aplikasi serupa yang membayar pembacanya dengan satoshi.
-            Aplikasi itu mati, dan sebabnya bisa ditebak: begitu ada harga per ayat,
-            yang datang bukan pembaca, melainkan skrip. Ketika hadiahnya habis,
-            tidak ada yang tersisa — karena tidak pernah ada alasan lain untuk datang.
-          </p>
-          <p>
-            Stele menolak menjadi mesin itu. Token yang Anda terima adalah tanda
-            terima, bukan upah. Nilainya hanya ada bagi orang yang benar-benar
-            membacanya. Program yang memalsukan sepuluh ribu sesi hanya menghasilkan
-            sepuluh ribu catatan kosong tentang dirinya sendiri.
-          </p>
-          <p>
-            Ada plafon tiga bacaan tercatat per hari. Pembaca paling gigih dan
-            penyerang paling gigih mendapat jumlah yang persis sama.
-          </p>
-        </div>
-      </section></Reveal>
+      <Reveal>
+        <section className="max-w-2xl space-y-8">
+          <h2 className="font-serif text-2xl">{c.home.rewardHeading}</h2>
+          <div className="space-y-5 leading-relaxed text-ink-soft">
+            <p>{c.home.rewardP1}</p>
+            <p>{c.home.rewardP2}</p>
+            <p>{c.home.rewardP3}</p>
+          </div>
+        </section>
+      </Reveal>
 
-      <Reveal><section className="max-w-2xl space-y-8">
-        <h2 className="font-serif text-2xl">Kenapa harus di rantai</h2>
-        <div className="space-y-5 leading-relaxed text-ink-soft">
-          <p>
-            Pertanyaan yang wajar, dan jawaban yang biasa diberikan tidak cukup
-            baik. Catatan bacaan tidak sedang terancam sensor. Tidak ada yang
-            berniat memindahkan riwayat devosinya ke aplikasi lain. Untuk sekadar
-            menyimpan, satu baris di basis data sudah selesai dan jauh lebih murah.
-          </p>
-          <p>
-            Alasannya bukan soal permanen. Alasannya adalah kami sendiri tidak
-            bisa berbohong. Sebuah aplikasi yang mencatat kesalehan penggunanya
-            punya alasan kuat untuk membesarkan angkanya sendiri, dan Anda tidak
-            punya cara memeriksanya. Di sini catatan hanya lahir dari pernyataan
-            64 byte yang ditandatangani kunci penilai lalu diperiksa program
-            on-chain. Kami tidak punya jalan untuk menerbitkan catatan yang tidak
-            lolos penilaian kami sendiri, dan plafon tiga per hari ditegakkan di
-            tempat yang tidak bisa kami ubah diam-diam.
-          </p>
-          <p>
-            Rantai di sini bukan supaya Anda tidak perlu percaya negara. Ia supaya
-            Anda tidak perlu percaya kami.
-          </p>
-        </div>
-      </section></Reveal>
+      <Reveal>
+        <section className="max-w-2xl space-y-8">
+          <h2 className="font-serif text-2xl">{c.home.chainHeading}</h2>
+          <div className="space-y-5 leading-relaxed text-ink-soft">
+            <p>{c.home.chainP1}</p>
+            <p>{c.home.chainP2}</p>
+            <p>{c.home.chainP3}</p>
+          </div>
+        </section>
+      </Reveal>
 
-      <Reveal><section className="max-w-2xl space-y-6">
-        <h2 className="font-serif text-2xl">Yang tidak kami klaim</h2>
-        <div className="space-y-5 leading-relaxed text-ink-soft">
-          <p>
-            Tidak ada cara membuktikan seseorang membaca. Yang bisa diperiksa hanya
-            apakah bentuk sebuah sesi masuk akal sebagai bacaan manusia — kecepatan
-            yang wajar, perhatian yang terputus-putus seperti perhatian orang sungguhan,
-            dan satu pertanyaan pendek yang jawabannya cuma ada di halaman itu.
-          </p>
-          <p>
-            Itu bukan bukti. Kami menyebutnya apa adanya, dan merancang seluruh
-            sistemnya dengan asumsi bahwa pemeriksaan itu bisa dilewati.
-          </p>
-        </div>
-        <Link href="/how-it-works" className="inline-block text-sm underline">
-          Rincian lengkapnya
-        </Link>
-      </section></Reveal>
+      <Reveal>
+        <section className="max-w-2xl space-y-6">
+          <h2 className="font-serif text-2xl">{c.home.claimHeading}</h2>
+          <div className="space-y-5 leading-relaxed text-ink-soft">
+            <p>{c.home.claimP1}</p>
+            <p>{c.home.claimP2}</p>
+          </div>
+          <Link href="/how-it-works" className="inline-block text-sm underline">
+            {c.home.claimLink}
+          </Link>
+        </section>
+      </Reveal>
 
-      <Reveal><section className="max-w-2xl space-y-5 rounded-lg border border-rule bg-paper-raised p-6">
-        <h2 className="font-serif text-xl">Soal uang</h2>
-        <p className="leading-relaxed text-ink-soft">
-          Token Stele berjalan di devnet dan tidak punya nilai finansial. Itu bukan
-          keterbatasan yang sedang menunggu diperbaiki — itu memang bentuk yang
-          diinginkan. Membayar orang untuk beribadah adalah hal yang wajar ditolak
-          banyak orang, dan kami tidak berminat membangunnya.
-        </p>
-      </section></Reveal>
+      <Reveal>
+        <section className="max-w-2xl space-y-5 rounded-lg border border-rule bg-paper-raised p-6">
+          <h2 className="font-serif text-xl">{c.home.moneyHeading}</h2>
+          <p className="leading-relaxed text-ink-soft">{c.home.moneyP1}</p>
+        </section>
+      </Reveal>
     </div>
   );
 }

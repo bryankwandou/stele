@@ -1,5 +1,7 @@
 ﻿"use client";
 
+import { useCopy } from "@/app/providers";
+
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { BookSummary, TranslationSummary, TraditionId } from "@/lib/corpus";
@@ -95,6 +97,8 @@ export function Picker({
     );
   }
 
+  const c = useCopy();
+
   const fieldClass =
     "w-full rounded-md border border-rule bg-paper-raised px-3 py-2 text-sm";
 
@@ -102,7 +106,7 @@ export function Picker({
     <div className="max-w-2xl space-y-5 rounded-lg border border-rule bg-paper-raised p-6">
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="space-y-1.5">
-          <span className="text-sm text-ink-soft">Bahasa</span>
+          <span className="text-sm text-ink-soft">{c.picker.language}</span>
           <select
             className={fieldClass}
             value={language}
@@ -117,7 +121,7 @@ export function Picker({
         </label>
 
         <label className="space-y-1.5">
-          <span className="text-sm text-ink-soft">Terjemahan</span>
+          <span className="text-sm text-ink-soft">{c.picker.translation}</span>
           <select
             className={fieldClass}
             value={translationId}
@@ -132,16 +136,16 @@ export function Picker({
         </label>
 
         {selectedTranslation?.canonicalNumbering === false && (
-          <p className="text-xs leading-relaxed text-ink-soft sm:col-span-2">
-            Arsip menyimpan terjemahan ini sebagai satu blok utuh per vagga, bukan
-            per syair. Nomor di samping baris adalah urutan tampil, bukan nomor
-            syair Dhammapada. Terjemahan di urutan atas daftar punya penomoran baku.
-          </p>
+          <p className="text-xs leading-relaxed text-ink-soft sm:col-span-2">{c.picker.numberingNote}</p>
         )}
 
         <label className="space-y-1.5">
           <span className="text-sm text-ink-soft">
-            {tradition === "islam" ? "Surah" : tradition === "buddhist" ? "Vagga" : "Kitab"}
+            {tradition === "islam"
+              ? c.picker.surah
+              : tradition === "buddhist"
+                ? c.picker.vagga
+                : c.picker.book}
           </span>
           <select
             className={fieldClass}
@@ -152,7 +156,7 @@ export function Picker({
               setChapter(1);
             }}
           >
-            {loadingBooks && <option>Memuat…</option>}
+            {loadingBooks && <option>{c.picker.loading}</option>}
             {books.map((b) => (
               <option key={b.id} value={b.id}>
                 {b.name}
@@ -163,7 +167,7 @@ export function Picker({
 
         {maxChapter > 1 && (
           <label className="space-y-1.5">
-            <span className="text-sm text-ink-soft">Pasal</span>
+            <span className="text-sm text-ink-soft">{c.picker.chapter}</span>
             <select
               className={fieldClass}
               value={chapter}

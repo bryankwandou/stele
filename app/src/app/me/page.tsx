@@ -1,19 +1,22 @@
-﻿import { Profile } from "@/components/Profile";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Catatan Anda — Stele",
-  description: "Beruntun, perikop yang tercatat, dan transaksi devnet Anda.",
-};
+import { Profile } from "@/components/Profile";
+import { copy } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
 
-export default function MePage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const c = copy(await getLocale());
+  return { title: c.me.metaTitle, description: c.me.metaDescription };
+}
+
+export default async function MePage() {
+  const c = copy(await getLocale());
+
   return (
     <main className="mx-auto max-w-2xl space-y-10 px-6 py-16">
       <header className="space-y-3">
-        <h1 className="font-serif text-4xl">Catatan Anda</h1>
-        <p className="leading-relaxed text-ink-soft">
-          Semua yang ada di halaman ini terikat pada alamat dompet Anda, bukan
-          pada identitas Anda.
-        </p>
+        <h1 className="font-serif text-4xl">{c.me.title}</h1>
+        <p className="leading-relaxed text-ink-soft">{c.me.lede}</p>
       </header>
       <Profile />
     </main>
