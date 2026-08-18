@@ -1,5 +1,7 @@
 "use client";
 
+import { useCopy } from "@/app/providers";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import type { Passage } from "@/lib/corpus";
@@ -35,6 +37,7 @@ interface FinishResponse {
 
 export function Reader({ passage }: { passage: Passage }) {
   const { publicKey, signTransaction } = useWallet();
+  const c = useCopy();
   const { connection } = useConnection();
 
   const [session, setSession] = useState<StartResponse | null>(null);
@@ -74,7 +77,7 @@ export function Reader({ passage }: { passage: Passage }) {
     })
       .then(async (res) => {
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error ?? "Sesi gagal dibuka.");
+        if (!res.ok) throw new Error(data.error ?? c.reader.sessionOpenFailed);
         return data as StartResponse;
       })
       .then((data) => {
@@ -145,13 +148,13 @@ export function Reader({ passage }: { passage: Passage }) {
       });
 
       const data = (await res.json()) as FinishResponse & { error?: string };
-      if (!res.ok) throw new Error(data.error ?? "Sesi gagal ditutup.");
+      if (!res.ok) throw new Error(data.error ?? c.reader.sessionCloseFailed);
 
       setResult(data);
       setPhase("verdict");
       if (data.attestation) setCountdown(data.claimDelayMs ?? 60_000);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Terjadi kesalahan.");
+      setError(e instanceof Error ? e.message : c.reader.generalError);
     }
   }, [session, choice]);
 
@@ -170,7 +173,7 @@ export function Reader({ passage }: { passage: Passage }) {
       setSignature(sig);
       setPhase("done");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Transaksi gagal dikirim.");
+      setError(e instanceof Error ? e.message : c.reader.txFailed);
       setPhase("verdict");
     }
   }
@@ -187,21 +190,18 @@ export function Reader({ passage }: { passage: Passage }) {
           {passage.traditionId === "christian" && ` ${passage.chapter}`}
         </h1>
         <p className="mt-2 text-sm text-ink-soft">
-          {passage.verses.length} ayat · {passage.wordCount} kata
+          {passage.verses.length} {c.reader.verses} · {passage.wordCount} {c.reader.words}
           {session && (
             <>
               {" · "}
-              {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")} dibaca
+              {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")} {c.reader.readSuffix}
             </>
           )}
         </p>
       </header>
 
       {!publicKey && (
-        <p className="max-w-lg rounded-lg border border-rule bg-paper-raised p-5 text-sm leading-relaxed text-ink-soft">
-          Teksnya bisa dibaca tanpa dompet. Sambungkan dompet devnet hanya bila Anda
-          ingin bacaan ini tercatat.
-        </p>
+        <p className="max-w-lg rounded-lg border border-rule bg-paper-raised p-5 text-sm leading-relaxed text-ink-soft">{c.reader.noWallet}</p>
       )}
 
       <article className="passage space-y-4" dir={passage.direction}>
@@ -219,7 +219,7 @@ export function Reader({ passage }: { passage: Passage }) {
         <p>
           {passage.attribution.label} · {passage.attribution.license}{" "}
           <a className="underline" href={passage.attribution.href}>
-            Sumber
+            {c.reader.sourceLink}
           </a>
         </p>
       </footer>
@@ -233,13 +233,14 @@ export function Reader({ passage }: { passage: Passage }) {
       {session && phase === "reading" && (
         <div className="max-w-lg space-y-4 rounded-lg border border-rule bg-paper-raised p-6">
           <p className="text-sm text-ink-soft">
-            Tercatat {session.countedToday} dari {session.dailyCap} bacaan hari ini.
+            {c.reader.recordedTodayBefore} {session.countedToday} {c.reader.recordedTodayMiddle}{" "}
+            {session.dailyCap} {c.reader.recordedTodayAfter}
           </p>
           <button
             onClick={() => setPhase(session.anchor ? "anchor" : "verdict")}
             className="rounded-md bg-ink px-5 py-2.5 text-sm text-paper hover:opacity-90"
           >
-            Selesai membaca
+            {c.reader.doneReading}
           </button>
         </div>
       )}
@@ -247,13 +248,10 @@ export function Reader({ passage }: { passage: Passage }) {
       {session?.anchor && phase === "anchor" && (
         <div className="max-w-lg space-y-4 rounded-lg border border-rule bg-paper-raised p-6">
           <p className="leading-relaxed">
-            Ayat mana yang memuat kata{" "}
+            {c.reader.anchorQuestionBefore}{" "}
             <span className="font-serif italic">{session.anchor.word}</span>?
           </p>
-          <p className="text-sm text-ink-soft">
-            Menjawab keliru tidak menghapus bacaan Anda. Hanya beruntun yang tidak
-            bertambah hari ini.
-          </p>
+          <p className="text-sm text-ink-soft">{c.reader.anchorNote}</p>
           <div className="flex flex-wrap gap-2">
             {session.anchor.options.map((option) => (
               <button
@@ -263,7 +261,7 @@ export function Reader({ passage }: { passage: Passage }) {
                   choice === option ? "border-ink bg-accent-soft" : "border-rule"
                 }`}
               >
-                Ayat {option}
+                {c.reader.verseOption} {option}
               </button>
             ))}
           </div>
@@ -272,7 +270,7 @@ export function Reader({ passage }: { passage: Passage }) {
             disabled={choice === null}
             className="rounded-md bg-ink px-5 py-2.5 text-sm text-paper hover:opacity-90 disabled:opacity-40"
           >
-            Kirim
+            {c.reader.submit}
           </button>
         </div>
       )}
@@ -283,7 +281,7 @@ export function Reader({ passage }: { passage: Passage }) {
             onClick={finish}
             className="rounded-md bg-ink px-5 py-2.5 text-sm text-paper hover:opacity-90"
           >
-            Catat bacaan ini
+            {c.reader.recordThis}
           </button>
         </div>
       )}
@@ -292,7 +290,9 @@ export function Reader({ passage }: { passage: Passage }) {
         <div className="max-w-lg space-y-4 rounded-lg border border-rule bg-paper-raised p-6">
           <p className="leading-relaxed">{result.message}</p>
           {result.streak != null && (
-            <p className="text-sm text-ink-soft">Beruntun: {result.streak} hari.</p>
+            <p className="text-sm text-ink-soft">
+              {c.reader.streakLabel} {result.streak} {c.reader.days}.
+            </p>
           )}
           {result.attestation && (
             <button
@@ -301,10 +301,10 @@ export function Reader({ passage }: { passage: Passage }) {
               className="rounded-md bg-ink px-5 py-2.5 text-sm text-paper hover:opacity-90 disabled:opacity-40"
             >
               {phase === "claiming"
-                ? "Mengirim transaksi…"
+                ? c.reader.sending
                 : countdown > 0
-                  ? `Catat di rantai (${Math.ceil(countdown / 1000)} dtk)`
-                  : "Catat di rantai"}
+                  ? `${c.reader.record} (${Math.ceil(countdown / 1000)} ${c.reader.seconds})`
+                  : c.reader.record}
             </button>
           )}
         </div>
@@ -312,14 +312,14 @@ export function Reader({ passage }: { passage: Passage }) {
 
       {phase === "done" && signature && (
         <div className="max-w-lg space-y-3 rounded-lg border border-rule bg-paper-raised p-6">
-          <p className="leading-relaxed">Tercatat di devnet.</p>
+          <p className="leading-relaxed">{c.reader.recordedOnDevnet}</p>
           <a
             className="text-sm underline"
             href={`https://explorer.solana.com/tx/${signature}?cluster=devnet`}
             target="_blank"
             rel="noreferrer"
           >
-            Lihat transaksinya
+            {c.reader.viewTx}
           </a>
         </div>
       )}

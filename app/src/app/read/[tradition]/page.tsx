@@ -1,19 +1,21 @@
 import { notFound } from "next/navigation";
 import { TRADITIONS, listTranslations, listBooks, type TraditionId } from "@/lib/corpus";
 import { Picker } from "@/components/Picker";
-
-export const revalidate = 3600;
+import { copy, traditionCopy } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale";
 
 export default async function TraditionPage({
   params,
 }: {
   params: Promise<{ tradition: string }>;
 }) {
+  const c = copy(await getLocale());
   const { tradition: id } = await params;
   const tradition = TRADITIONS.find((t) => t.id === id);
   if (!tradition) notFound();
 
   const traditionId = tradition.id as TraditionId;
+  const named = traditionCopy(c, traditionId);
 
   let translations;
   try {
@@ -21,11 +23,8 @@ export default async function TraditionPage({
   } catch {
     return (
       <div className="max-w-lg space-y-3">
-        <h1 className="font-serif text-2xl">{tradition.name}</h1>
-        <p className="text-ink-soft">
-          Daftar terjemahan sedang tidak bisa diambil dari sumbernya. Ini gangguan di
-          sisi penyedia teks, bukan di bacaan Anda. Coba lagi sebentar lagi.
-        </p>
+        <h1 className="font-serif text-2xl">{named.name}</h1>
+        <p className="text-ink-soft">{c.traditionPage.unavailable}</p>
       </div>
     );
   }
@@ -39,10 +38,10 @@ export default async function TraditionPage({
   return (
     <div className="space-y-8">
       <header className="max-w-2xl">
-        <h1 className="font-serif text-3xl">{tradition.name}</h1>
-        <p className="mt-3 leading-relaxed text-ink-soft">{tradition.blurb}</p>
+        <h1 className="font-serif text-3xl">{named.name}</h1>
+        <p className="mt-3 leading-relaxed text-ink-soft">{named.blurb}</p>
         <p className="mt-4 text-sm text-ink-soft">
-          {translations.length} terjemahan tersedia.{" "}
+          {translations.length} {c.traditionPage.translationsAvailable}{" "}
           <a className="underline" href={tradition.attribution.href}>
             {tradition.attribution.label}
           </a>
