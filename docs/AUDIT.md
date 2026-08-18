@@ -158,7 +158,7 @@ atau menyelesaikan satu kitab utuh.
 | Dompet diminta terlalu awal | Berat | Diperbaiki |
 | Tidak ada model pendapatan | Berat | Terbuka |
 | Nilai sebenarnya ada di korpus, bukan attestation | Berat | Sebagian |
-| Ketergantungan API tanpa cadangan | Sedang | Terbuka |
+| Ketergantungan API tanpa cadangan | Sedang | Sebagian |
 | Pemeriksaan digambarkan terlalu kuat | Sedang | Diperbaiki |
 | Netralitas melemahkan distribusi | Sedang | Terbuka |
 | Plafon memotong pengguna terbaik | Ringan | Terbuka |
@@ -211,8 +211,16 @@ hipotesis tanpa satu pun pelanggan.
 belum ada endpoint publik yang bisa dipakai pengembang lain. Sampai itu ada,
 poin ini baru setengah dikerjakan.
 
-**6 — ketergantungan API.** Masih tanpa cadangan. Bila `bible.helloao.org` mati,
-sebagian besar korpus ikut hilang.
+**6 — ketergantungan API.** Sebagian. Seluruh panggilan korpus sekarang lewat
+satu pembungkus yang mengulang dua kali dengan jeda menanjak dan menyerah setelah
+delapan detik, sehingga gangguan sesaat tidak lagi membatalkan bacaan orang.
+Galat 4xx sengaja tidak diulang — perikop yang memang tidak ada tidak akan
+menjadi ada karena ditanya tiga kali.
+
+Yang belum terjawab tetap yang paling besar: bila `bible.helloao.org` benar-benar
+mati berjam-jam, sebagian besar korpus ikut hilang. Mencerminkan arsipnya sendiri
+akan menjawab itu, tetapi memindahkan proyek ini dari "tidak menyimpan satu ayat
+pun" menjadi penyimpan teks suci — pertukaran yang belum kami putuskan.
 
 **8 dan 9 — netralitas dan plafon.** Keduanya konsekuensi dari keputusan yang
 disengaja, bukan cacat yang lupa diperbaiki. Disebut di sini supaya tidak perlu

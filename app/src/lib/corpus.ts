@@ -105,6 +105,43 @@ export const TRADITIONS: Tradition[] = [
 /** Cache satu jam di edge; teks suci tidak berubah, tetapi daftar bisa bertambah. */
 const FETCH_OPTS: RequestInit = { next: { revalidate: 3600 } } as RequestInit;
 
+/**
+ * Pengambilan yang tahan gangguan sesaat.
+ *
+ * Ketiga arsip di bawah ini milik orang lain, dan tidak satu pun menjanjikan
+ * ketersediaan. Sekali kedip di jaringan seharusnya tidak membatalkan bacaan
+ * seseorang, jadi percobaan diulang dua kali dengan jeda yang menanjak. Yang
+ * sengaja tidak diulang adalah 404: perikop yang memang tidak ada tidak akan
+ * menjadi ada karena ditanya tiga kali.
+ *
+ * Batas waktu delapan detik ada supaya sumber yang menggantung gagal cepat,
+ * bukan menahan render sampai batas fungsi Vercel.
+ */
+async function ambil(url: string, percobaan = 3): Promise<Response> {
+  let terakhir: unknown;
+
+  for (let i = 0; i < percobaan; i += 1) {
+    try {
+      const res = await fetch(url, {
+        ...FETCH_OPTS,
+        signal: AbortSignal.timeout(8000),
+      });
+      if (res.ok) return res;
+      if (res.status >= 400 && res.status < 500) return res;
+      terakhir = new Error(`Sumber menjawab ${res.status}.`);
+    } catch (e) {
+      terakhir = e;
+    }
+    if (i < percobaan - 1) {
+      await new Promise((r) => setTimeout(r, 250 * 2 ** i));
+    }
+  }
+
+  throw terakhir instanceof Error
+    ? terakhir
+    : new Error("Sumber korpus tidak bisa dihubungi.");
+}
+
 function countWords(verses: Verse[]): number {
   return verses.reduce(
     (total, v) => total + v.text.trim().split(/\s+/).filter(Boolean).length,
@@ -130,7 +167,7 @@ function stripMarkup(value: unknown): string {
 const HELLOAO = "https://bible.helloao.org/api";
 
 async function christianTranslations(): Promise<TranslationSummary[]> {
-  const res = await fetch(`${HELLOAO}/available_translations.json`, FETCH_OPTS);
+  const res = await ambil(`${HELLOAO}/available_translations.json`);
   if (!res.ok) throw new Error(`Daftar terjemahan Alkitab gagal dimuat (${res.status}).`);
   const data = await res.json();
   return (data.translations as Record<string, unknown>[]).map((t) => ({
@@ -142,7 +179,7 @@ async function christianTranslations(): Promise<TranslationSummary[]> {
 }
 
 async function christianBooks(translationId: string): Promise<BookSummary[]> {
-  const res = await fetch(`${HELLOAO}/${translationId}/books.json`, FETCH_OPTS);
+  const res = await ambil(`${HELLOAO}/${translationId}/books.json`);
   if (!res.ok) throw new Error(`Daftar kitab gagal dimuat (${res.status}).`);
   const data = await res.json();
   return (data.books as Record<string, unknown>[]).map((b) => ({
@@ -157,7 +194,7 @@ async function christianPassage(
   bookId: string,
   chapter: number
 ): Promise<Passage> {
-  const res = await fetch(`${HELLOAO}/${translationId}/${bookId}/${chapter}.json`, FETCH_OPTS);
+  const res = await ambil(`${HELLOAO}/${translationId}/${bookId}/${chapter}.json`);
   if (!res.ok) throw new Error(`Perikop tidak ditemukan (${res.status}).`);
   const data = await res.json();
 
@@ -221,7 +258,7 @@ const SURAH_NAMES = [
 ];
 
 async function islamTranslations(): Promise<TranslationSummary[]> {
-  const res = await fetch(`${QURAN}/editions.json`, FETCH_OPTS);
+  const res = await ambil(`${QURAN}/editions.json`);
   if (!res.ok) throw new Error(`Daftar terjemahan Qur'an gagal dimuat (${res.status}).`);
   const data = (await res.json()) as Record<string, Record<string, unknown>>;
 
@@ -242,7 +279,7 @@ async function islamBooks(): Promise<BookSummary[]> {
 }
 
 async function islamPassage(translationId: string, surah: number): Promise<Passage> {
-  const res = await fetch(`${QURAN}/editions/${translationId}/${surah}.json`, FETCH_OPTS);
+  const res = await ambil(`${QURAN}/editions/${translationId}/${surah}.json`);
   if (!res.ok) throw new Error(`Surah tidak ditemukan (${res.status}).`);
   const data = await res.json();
 
@@ -315,7 +352,7 @@ const RTL_LANGS = new Set(["he", "ar", "fa", "ur"]);
  * seluruh vagga.
  */
 async function buddhistTranslations(): Promise<TranslationSummary[]> {
-  const res = await fetch(`${SUTTACENTRAL}/suttas/${DHAMMAPADA_VAGGA[0].uid}`, FETCH_OPTS);
+  const res = await ambil(`${SUTTACENTRAL}/suttas/${DHAMMAPADA_VAGGA[0].uid}`);
   if (!res.ok) throw new Error(`Daftar terjemahan Dhammapada gagal dimuat (${res.status}).`);
   const data = await res.json();
 
@@ -369,9 +406,8 @@ async function segmentedSutta(
   author: string,
   lang: string
 ): Promise<Verse[] | null> {
-  const res = await fetch(
-    `${SUTTACENTRAL}/bilarasuttas/${uid}/${author}?lang=${lang}`,
-    FETCH_OPTS
+  const res = await ambil(
+    `${SUTTACENTRAL}/bilarasuttas/${uid}/${author}?lang=${lang}`
   );
   if (!res.ok) return null;
 
@@ -410,7 +446,7 @@ async function legacySutta(
   author: string,
   lang: string
 ): Promise<Verse[]> {
-  const res = await fetch(`${SUTTACENTRAL}/suttas/${uid}/${author}?lang=${lang}`, FETCH_OPTS);
+  const res = await ambil(`${SUTTACENTRAL}/suttas/${uid}/${author}?lang=${lang}`);
   if (!res.ok) throw new Error(`Vagga tidak ditemukan (${res.status}).`);
   const data = await res.json();
 
@@ -536,7 +572,7 @@ export async function countCorpus(): Promise<CorpusCount> {
   // Bila setiap sumber sedang tidak bisa dihubungi, jangan tampilkan nol —
   // itu lebih menyesatkan daripada tidak menampilkan apa pun.
   if (translations === 0) {
-    return { translations: 1781, languages: 1102, traditions: TRADITIONS.length };
+    return { translations: 1781, languages: 1074, traditions: TRADITIONS.length };
   }
 
   return { translations, languages: languages.size, traditions: TRADITIONS.length };
