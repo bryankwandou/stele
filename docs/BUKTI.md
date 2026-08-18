@@ -3,7 +3,7 @@
 Berkas ini ditulis oleh `app/scripts/prove-chain.mjs`, bukan diketik tangan.
 Jalankan ulang kapan pun untuk memeriksa isinya sendiri.
 
-Dijalankan: 2026-08-08T11:14:11.853Z
+Dijalankan: 2026-08-18T07:31:22.722Z
 
 | Bagian | Alamat |
 |---|---|
@@ -13,7 +13,7 @@ Dijalankan: 2026-08-08T11:14:11.853Z
 | Kunci penilai | `HAXHHdiAvySjAKt9nEATDdhvi9DZJwRYsPEaB44QAUqK` |
 
 Dompet pembaca dibuat baru setiap kali skrip dijalankan, jadi tidak ada keadaan
-lama yang bisa menutupi kegagalan: `J891XuZJmLyhmfDFPEMFtUKcuz4kRxtw864VCGc5Ybyn`
+lama yang bisa menutupi kegagalan: `GUSs6YPatVMLQPbGv7x7sPx64KFzzyTpCbtp91TAjgP3`
 
 ## Hasil
 
@@ -23,7 +23,7 @@ benar dilemparkan runtime, diambil dari log transaksi — bukan ringkasan kami.
 
 | # | Percobaan | Harapan | Hasil | Catatan |
 |---|---|---|---|---|
-| 1 | Klaim sah mencetak token | berhasil | sesuai | saldo 0 → 0.1 $STL, tx 47EVzH1zCS1TDLS7LRHdcFTfteTuVP7uWUpxomHAQzFmWqNP6EQL592axLqpavRf9iYHtuBdN8ZnZNsR7gTwNmrQ |
+| 1 | Klaim sah mencetak token | berhasil | sesuai | saldo 0 → 0.1 $STL, tx 3t6HNUT24ubiLVPLxLzeqHTNuAjfMoc1vvy6Sz3uYuCcChncjjm6gJBqvTYej3XfiyfUjGLc7Ce7BXdV9ZrLYdQa |
 | 2 | Nonce yang sama dipakai dua kali | ditolak | sesuai | akun PDA nonce sudah terpakai |
 | 3 | Ditandatangani kunci selain kunci penilai | ditolak | sesuai | UnknownAttestor — Penanda tangan bukan attestor terdaftar. |
 | 4 | Jumlah dinaikkan setelah ditandatangani (masih di bawah plafon) | ditolak | sesuai | AttestationMismatch — Pesan yang ditandatangani tidak cocok dengan klaim ini. |
@@ -38,9 +38,9 @@ nonce-nya baru.
 
 ## Transaksi yang berhasil
 
-1. [`47EVzH1zCS1TDLS7LRHdcFTfteTuVP7u…`](https://explorer.solana.com/tx/47EVzH1zCS1TDLS7LRHdcFTfteTuVP7uWUpxomHAQzFmWqNP6EQL592axLqpavRf9iYHtuBdN8ZnZNsR7gTwNmrQ?cluster=devnet)
-2. [`28fSMJ3vXD6nz1stvmk1mZJNr8GP3yfY…`](https://explorer.solana.com/tx/28fSMJ3vXD6nz1stvmk1mZJNr8GP3yfYucmsK6TT9g2P7VfJj2KkYdpEnbrLzpArSq6Dqr88XZBBEjgb1rLkRafs?cluster=devnet)
-3. [`64rdyFcikE2R2wYhP9LWqm4CFLTU1cDs…`](https://explorer.solana.com/tx/64rdyFcikE2R2wYhP9LWqm4CFLTU1cDskRYNF2q1FMi3fqfgvvBzXZFjKEEWhjTQaJF2fMdGbRPyVS5EztwtHaWY?cluster=devnet)
+1. [`3t6HNUT24ubiLVPLxLzeqHTNuAjfMoc1…`](https://explorer.solana.com/tx/3t6HNUT24ubiLVPLxLzeqHTNuAjfMoc1vvy6Sz3uYuCcChncjjm6gJBqvTYej3XfiyfUjGLc7Ce7BXdV9ZrLYdQa?cluster=devnet)
+2. [`wbzcjXWEnbxumt1Xa8NXYyDx4HLrxX1U…`](https://explorer.solana.com/tx/wbzcjXWEnbxumt1Xa8NXYyDx4HLrxX1UNnisN8cpmgZs7pohxZXuKQJFEaHgpz1jULfD3sQUaoaJDM1ScFAtc7z?cluster=devnet)
+3. [`4f9yq5X8de1vtCzsBpLoen7aUbk8Bd6z…`](https://explorer.solana.com/tx/4f9yq5X8de1vtCzsBpLoen7aUbk8Bd6znkWHnonQfWUga18aUzKxYjZpfqNXhGWH2FAvG8d7K4oV444s4HU21Weg?cluster=devnet)
 
 ## Yang dibuktikan tabel ini
 
