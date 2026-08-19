@@ -25,7 +25,7 @@ export const en: Copy = {
   lang: {
     label: "Language",
     other: "Bahasa Indonesia",
-    switchTo: "Beralih ke Bahasa Indonesia",
+    switchTo: "Change language",
   },
   home: {
     eyebrow: "Solana devnet",

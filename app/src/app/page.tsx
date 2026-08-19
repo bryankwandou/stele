@@ -10,7 +10,7 @@ import { Tally } from "@/components/Tally";
 /**
  * Halaman ini dirender per permintaan karena bahasa dibaca dari kuki. Angka
  * korpusnya sendiri tetap disinggahkan satu jam di lapisan fetch, jadi yang
- * dikerjakan ulang hanya penyusunan HTML, bukan pemanggilan ketiga arsip.
+ * dikerjakan ulang hanya penyusunan HTML, bukan pemanggilan tiap arsip.
  */
 export default async function HomePage() {
   const locale = await getLocale();
