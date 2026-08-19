@@ -29,7 +29,7 @@ export const id = {
   lang: {
     label: "Bahasa",
     other: "English",
-    switchTo: "Switch to English",
+    switchTo: "Ganti bahasa",
   },
   home: {
     eyebrow: "Solana devnet",

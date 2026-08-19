@@ -25,7 +25,7 @@ export const ar: Copy = {
   lang: {
     label: "اللغة",
     other: "العربية",
-    switchTo: "التبديل إلى العربية",
+    switchTo: "تغيير اللغة",
   },
   home: {
     eyebrow: "شبكة سولانا التجريبية",

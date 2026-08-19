@@ -24,7 +24,7 @@ export const zh: Copy = {
   lang: {
     label: "语言",
     other: "简体中文",
-    switchTo: "切换到简体中文",
+    switchTo: "切换语言",
   },
   home: {
     eyebrow: "Solana 测试网",
