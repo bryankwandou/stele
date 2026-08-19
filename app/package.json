@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "periksa:mishnah": "node --experimental-strip-types scripts/periksa-mishnah.mjs",
+    "periksa:gita": "node --experimental-strip-types scripts/periksa-gita.mjs",
+    "periksa:gurbani": "node scripts/periksa-gurbani.mjs"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.32.1",

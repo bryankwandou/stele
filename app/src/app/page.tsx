@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { countCorpus } from "@/lib/corpus";
-import { copy } from "@/lib/i18n";
+import { copy, LOCALES } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 import { Carving } from "@/components/Carving";
 import { Reveal } from "@/components/Reveal";
@@ -17,15 +17,23 @@ export default async function HomePage() {
   const c = copy(locale);
   const corpus = await countCorpus();
 
+  // Dua angka bahasa yang berbeda, dan keduanya disebut namanya.
+  //
+  // Sebelumnya barisan ini hanya menulis "Bahasa" di bawah angka seribuan, yang
+  // datang dari jumlah bahasa terjemahan di arsip sumber. Pembaca yang melihat
+  // angka itu wajar mengira situsnya sendiri tersedia dalam seribu bahasa.
+  // Angkanya benar, tetapi labelnya membuatnya terbaca sebagai janji yang tidak
+  // pernah dibuat, jadi keduanya kini berdiri terpisah.
   const facts = [
     { label: c.home.factTranslations, value: corpus.translations },
     { label: c.home.factLanguages, value: corpus.languages },
+    { label: c.home.factInterface, value: LOCALES.length },
     { label: c.home.factTraditions, value: corpus.traditions },
     { label: c.home.factCap, value: 3 },
   ];
 
   return (
-    <div className="space-y-24">
+    <div className="space-y-20">
       <section className="grid items-center gap-12 sm:grid-cols-[1fr_auto]">
         <Reveal className="max-w-2xl">
           <p className="text-sm uppercase tracking-[0.18em] text-ink-soft">
@@ -57,7 +65,7 @@ export default async function HomePage() {
         </Reveal>
       </section>
 
-      <section className="grid gap-x-8 gap-y-6 border-y border-rule py-8 sm:grid-cols-4">
+      <section className="grid gap-x-8 gap-y-6 grid-cols-2 border-y border-rule py-8 sm:grid-cols-5">
         {facts.map((fact, i) => (
           <Reveal key={fact.label} delay={i * 90}>
             <div className="font-serif text-3xl">
@@ -68,47 +76,32 @@ export default async function HomePage() {
         ))}
       </section>
 
+      {/* Tiga hal yang perlu diketahui sebelum mulai, satu kalimat masing-masing.
+          Uraian panjangnya tinggal di halaman cara kerja: halaman muka bukan
+          tempat menjelaskan, ia tempat memutuskan mau membaca atau tidak. */}
       <Reveal>
-        <section className="max-w-2xl space-y-8">
-          <h2 className="font-serif text-2xl">{c.home.rewardHeading}</h2>
-          <div className="space-y-5 leading-relaxed text-ink-soft">
-            <p>{c.home.rewardP1}</p>
-            <p>{c.home.rewardP2}</p>
-            <p>{c.home.rewardP3}</p>
+        <section className="grid max-w-4xl gap-10 sm:grid-cols-3">
+          <div className="space-y-3">
+            <h2 className="font-serif text-xl">{c.home.rewardHeading}</h2>
+            <p className="leading-relaxed text-ink-soft">{c.home.rewardP3}</p>
+          </div>
+          <div className="space-y-3">
+            <h2 className="font-serif text-xl">{c.home.chainHeading}</h2>
+            <p className="leading-relaxed text-ink-soft">{c.home.chainP3}</p>
+          </div>
+          <div className="space-y-3">
+            <h2 className="font-serif text-xl">{c.home.claimHeading}</h2>
+            <p className="leading-relaxed text-ink-soft">{c.home.claimP2}</p>
           </div>
         </section>
       </Reveal>
 
       <Reveal>
-        <section className="max-w-2xl space-y-8">
-          <h2 className="font-serif text-2xl">{c.home.chainHeading}</h2>
-          <div className="space-y-5 leading-relaxed text-ink-soft">
-            <p>{c.home.chainP1}</p>
-            <p>{c.home.chainP2}</p>
-            <p>{c.home.chainP3}</p>
-          </div>
-        </section>
+        <Link href="/how-it-works" className="inline-block text-sm underline">
+          {c.home.claimLink}
+        </Link>
       </Reveal>
 
-      <Reveal>
-        <section className="max-w-2xl space-y-6">
-          <h2 className="font-serif text-2xl">{c.home.claimHeading}</h2>
-          <div className="space-y-5 leading-relaxed text-ink-soft">
-            <p>{c.home.claimP1}</p>
-            <p>{c.home.claimP2}</p>
-          </div>
-          <Link href="/how-it-works" className="inline-block text-sm underline">
-            {c.home.claimLink}
-          </Link>
-        </section>
-      </Reveal>
-
-      <Reveal>
-        <section className="max-w-2xl space-y-5 rounded-lg border border-rule bg-paper-raised p-6">
-          <h2 className="font-serif text-xl">{c.home.moneyHeading}</h2>
-          <p className="leading-relaxed text-ink-soft">{c.home.moneyP1}</p>
-        </section>
-      </Reveal>
     </div>
   );
 }

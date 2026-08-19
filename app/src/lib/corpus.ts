@@ -10,7 +10,16 @@
  * menampilkan perikop tanpa kreditnya.
  */
 
-export type TraditionId = "christian" | "islam" | "buddhist";
+import { GITA, GITA_VERSIONS } from "./gita";
+import { MISHNAH } from "./mishnah";
+
+export type TraditionId =
+  | "christian"
+  | "islam"
+  | "buddhist"
+  | "jewish"
+  | "hindu"
+  | "sikh";
 
 export interface Attribution {
   /** Nama yang ditampilkan di kaki halaman pembaca. */
@@ -100,7 +109,54 @@ export const TRADITIONS: Tradition[] = [
       license: "CC0 dan CC BY, bervariasi per terjemahan.",
     },
   },
+  {
+    id: "jewish",
+    name: "Mishnah",
+    blurb: "63 traktat dalam enam seder, beserta teks Ibraninya, dari arsip Sefaria.",
+    attribution: {
+      label: "Sefaria",
+      href: "https://www.sefaria.org",
+      license:
+        "Domain publik, CC0, dan CC BY, bervariasi per versi. Sumber wajib disebut dan ditautkan.",
+    },
+  },
+  {
+    id: "hindu",
+    name: "Bhagawadgita",
+    blurb:
+      "701 syair dalam 18 adhyaya, beserta teks Sanskertanya, dari arsip Vedic Scriptures.",
+    attribution: {
+      label: "Vedic Scriptures",
+      href: "https://vedicscriptures.github.io",
+      license: "Lisensi MIT. Sumber wajib disebut dan ditautkan.",
+    },
+  },
+  {
+    id: "sikh",
+    name: "Guru Granth Sahib",
+    blurb:
+      "1.430 ang dalam aksara Gurmukhi, beserta terjemahannya, dari arsip GurbaniNow.",
+    attribution: {
+      label: "GurbaniNow",
+      href: "https://gurbaninow.com",
+      license: "Lisensi MIT, basis data Shabad OS. Sumber wajib disebut dan ditautkan.",
+    },
+  },
 ];
+
+/**
+ * Kredit satu tradisi, dicari berdasarkan namanya.
+ *
+ * Sebelumnya perikop mengambilnya lewat indeks larik. Indeks itu benar tepat
+ * sampai ada tradisi baru disisipkan di tengah, dan bentuk kegagalannya adalah
+ * teks yang tampil membawa kredit sumber lain — pelanggaran lisensi yang tidak
+ * memicu satu pun galat.
+ */
+function atribusi(id: TraditionId): Attribution {
+  const t = TRADITIONS.find((x) => x.id === id);
+  if (!t) throw new Error(`Tradisi tidak dikenal: ${id}`);
+  return t.attribution;
+}
 
 /** Cache satu jam di edge; teks suci tidak berubah, tetapi daftar bisa bertambah. */
 const FETCH_OPTS: RequestInit = { next: { revalidate: 3600 } } as RequestInit;
@@ -108,7 +164,7 @@ const FETCH_OPTS: RequestInit = { next: { revalidate: 3600 } } as RequestInit;
 /**
  * Pengambilan yang tahan gangguan sesaat.
  *
- * Ketiga arsip di bawah ini milik orang lain, dan tidak satu pun menjanjikan
+ * Semua arsip di bawah ini milik orang lain, dan tidak satu pun menjanjikan
  * ketersediaan. Sekali kedip di jaringan seharusnya tidak membatalkan bacaan
  * seseorang, jadi percobaan diulang dua kali dengan jeda yang menanjak. Yang
  * sengaja tidak diulang adalah 404: perikop yang memang tidak ada tidak akan
@@ -495,6 +551,320 @@ async function buddhistPassage(translationId: string, vagga: number): Promise<Pa
 }
 
 // ---------------------------------------------------------------------------
+// Yahudi — Sefaria
+// ---------------------------------------------------------------------------
+
+const SEFARIA = "https://www.sefaria.org/api";
+
+/**
+ * Sefaria menyimpan banyak versi per traktat dan sudah menandai satu yang
+ * utama untuk tiap bahasa. Dua yang ditawarkan di sini adalah keduanya: teks
+ * Ibrani dan terjemahan Inggris. Menyodorkan seluruh daftar versi berarti
+ * memberi puluhan pilihan yang bedanya hanya terasa bagi orang yang sudah tahu
+ * persis apa yang dicarinya.
+ */
+async function jewishTranslations(): Promise<TranslationSummary[]> {
+  return [
+    {
+      id: "hebrew",
+      name: "עברית — teks Ibrani",
+      language: "Hebrew",
+      direction: "rtl",
+      canonicalNumbering: true,
+    },
+    {
+      id: "english",
+      name: "English — Sefaria",
+      language: "English",
+      direction: "ltr",
+      canonicalNumbering: true,
+    },
+  ];
+}
+
+async function jewishBooks(): Promise<BookSummary[]> {
+  return MISHNAH.map((t) => ({
+    id: t.id,
+    name: `${t.name} — ${t.seder}`,
+    chapters: t.chapters,
+  }));
+}
+
+async function jewishPassage(
+  translationId: string,
+  tractateId: string,
+  chapter: number
+): Promise<Passage> {
+  const tractate = MISHNAH.find((t) => t.id === tractateId);
+  if (!tractate) throw new Error("Traktat tidak dikenal.");
+
+  const versi = translationId === "hebrew" ? "hebrew" : "english";
+  const ref = encodeURIComponent(`${tractate.id} ${chapter}`);
+  const res = await ambil(`${SEFARIA}/v3/texts/${ref}?version=${versi}`);
+  if (!res.ok) throw new Error(`Bab tidak ditemukan (${res.status}).`);
+
+  const data = await res.json();
+  const version = (data.versions as Record<string, unknown>[] | undefined)?.[0];
+  const isi = version?.text;
+
+  if (!Array.isArray(isi) || isi.length === 0) {
+    throw new Error("Bab kosong pada versi ini.");
+  }
+
+  // Teks Sefaria membawa penanda tipografi — huruf awal yang dibesarkan,
+  // catatan kaki, sesekali tabel. Dibersihkan di sini supaya yang sampai ke
+  // pembaca hanya kalimatnya; nomor mishnah sudah dibawa oleh urutan lariknya.
+  const verses: Verse[] = isi
+    .map((baris, i) => ({
+      n: i + 1,
+      text: stripMarkup(baris)
+        .replace(/<[^>]+>/g, " ")
+        .replace(/&nbsp;/g, " ")
+        .replace(/&[a-z]+;/g, " ")
+        .replace(/\s+/g, " ")
+        .trim(),
+    }))
+    .filter((v) => v.text.length > 0);
+
+  if (verses.length === 0) throw new Error("Bab kosong setelah dibersihkan.");
+
+  return {
+    traditionId: "jewish",
+    translationId,
+    translationName:
+      versi === "hebrew" ? "עברית" : String(version?.versionTitle ?? "English"),
+    bookId: tractate.id,
+    bookName: `${tractate.name} — ${tractate.seder}`,
+    chapter,
+    verses,
+    wordCount: countWords(verses),
+    direction: versi === "hebrew" ? "rtl" : "ltr",
+    attribution: atribusi("jewish"),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Hindu — Vedic Scriptures
+// ---------------------------------------------------------------------------
+
+const VEDIC = "https://vedicscriptures.github.io";
+
+/** Batas kerja paralel saat satu adhyaya diambil syair demi syair. */
+const PARALEL = 8;
+
+async function hinduTranslations(): Promise<TranslationSummary[]> {
+  return GITA_VERSIONS.map((v) => ({
+    id: v.id,
+    name: v.name,
+    language: v.language,
+    direction: "ltr" as const,
+    canonicalNumbering: true,
+  }));
+}
+
+async function hinduBooks(): Promise<BookSummary[]> {
+  return GITA.map((a) => ({
+    id: String(a.n),
+    name: `${a.n}. ${a.name}`,
+    chapters: 1,
+  }));
+}
+
+/**
+ * Arsipnya hanya melayani satu syair per permintaan; tidak ada endpoint yang
+ * mengembalikan satu adhyaya utuh. Adhyaya terpanjang berisi 78 syair, jadi
+ * pengambilannya dijalankan berombongan delapan-delapan: cukup cepat bagi
+ * pembaca, dan tidak menjatuhkan tujuh puluh delapan permintaan sekaligus ke
+ * situs statis milik orang lain. Hasilnya disinggahkan sejam oleh lapisan
+ * fetch, sehingga ongkos ini hanya dibayar pembaca pertama.
+ */
+async function hinduPassage(translationId: string, adhyaya: number): Promise<Passage> {
+  const bab = GITA.find((a) => a.n === adhyaya);
+  if (!bab) throw new Error("Adhyaya tidak dikenal.");
+
+  const versi = GITA_VERSIONS.find((v) => v.id === translationId);
+  if (!versi) throw new Error("Terjemahan tidak dikenal.");
+
+  const nomor = Array.from({ length: bab.verses }, (_, i) => i + 1);
+  const teks: string[] = new Array(bab.verses).fill("");
+
+  for (let i = 0; i < nomor.length; i += PARALEL) {
+    await Promise.all(
+      nomor.slice(i, i + PARALEL).map(async (n) => {
+        const res = await ambil(`${VEDIC}/slok/${adhyaya}/${n}`);
+        if (!res.ok) return;
+
+        const data = (await res.json()) as Record<string, unknown>;
+        const mentah =
+          versi.field === "slok" || versi.field === "transliteration"
+            ? data[versi.field]
+            : (data[versi.id] as Record<string, unknown> | undefined)?.[versi.field];
+
+        teks[n - 1] = bersihkanSyair(stripMarkup(mentah));
+      })
+    );
+  }
+
+  const verses: Verse[] = teks
+    .map((text, i) => ({ n: i + 1, text }))
+    .filter((v) => v.text.length > 0);
+
+  if (verses.length === 0) throw new Error("Adhyaya kosong pada versi ini.");
+
+  return {
+    traditionId: "hindu",
+    translationId,
+    translationName: versi.name,
+    bookId: String(adhyaya),
+    bookName: `${adhyaya}. ${bab.name}`,
+    chapter: 1,
+    verses,
+    wordCount: countWords(verses),
+    direction: "ltr",
+    attribution: atribusi("hindu"),
+  };
+}
+
+/**
+ * Membuang penanda nomor yang dibawa sebagian penerjemah di awal atau ujung
+ * barisnya — "।।2.47।।" di depan terjemahan Hindi, "||2-47||" di ekor teks
+ * akar. Nomornya sudah dibawa oleh urutan larik, dan menampilkannya dua kali
+ * membuat syair terbaca seperti keluaran mentah.
+ */
+function bersihkanSyair(teks: string): string {
+  return teks
+    .replace(/^[।|]{1,2}\s*\d+[.\-]\d+\s*[।|]{1,2}\s*/u, "")
+    .replace(/\s*[।|]{1,2}\s*\d+[.\-]\d+\s*[।|]{1,2}\s*$/u, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// ---------------------------------------------------------------------------
+// Sikh — GurbaniNow
+// ---------------------------------------------------------------------------
+
+const GURBANI = "https://api.gurbaninow.com/v2";
+
+/** Jumlah ang dalam satu jilid baku Guru Granth Sahib. */
+const ANG = 1430;
+
+interface BarisGurbani {
+  gurmukhi?: { unicode?: string };
+  translation?: {
+    english?: { default?: string };
+    punjabi?: { default?: { unicode?: string } };
+    spanish?: string;
+  };
+  transliteration?: {
+    english?: { text?: string };
+    devanagari?: { text?: string };
+  };
+}
+
+/** Cara satu versi dibaca dari satu baris. Ditulis sekali, dipakai dua kali. */
+const GURBANI_VERSIONS: {
+  id: string;
+  name: string;
+  language: string;
+  baca: (b: BarisGurbani) => string | undefined;
+}[] = [
+  {
+    id: "gurmukhi",
+    name: "ਗੁਰਮੁਖੀ — teks akar",
+    language: "Gurmukhi",
+    baca: (b) => b.gurmukhi?.unicode,
+  },
+  {
+    id: "english",
+    name: "English — Sant Singh Khalsa",
+    language: "English",
+    baca: (b) => b.translation?.english?.default,
+  },
+  {
+    id: "punjabi",
+    name: "ਪੰਜਾਬੀ — Prof. Sahib Singh",
+    language: "Punjabi",
+    baca: (b) => b.translation?.punjabi?.default?.unicode,
+  },
+  {
+    id: "spanish",
+    name: "Español",
+    language: "Spanish",
+    baca: (b) => b.translation?.spanish,
+  },
+  {
+    id: "transliteration",
+    name: "Latin — alih aksara",
+    language: "English",
+    baca: (b) => b.transliteration?.english?.text,
+  },
+  {
+    id: "devanagari",
+    name: "देवनागरी — alih aksara",
+    language: "Hindi",
+    baca: (b) => b.transliteration?.devanagari?.text,
+  },
+];
+
+async function sikhTranslations(): Promise<TranslationSummary[]> {
+  return GURBANI_VERSIONS.map((v) => ({
+    id: v.id,
+    name: v.name,
+    language: v.language,
+    // Gurmukhi ditulis kiri-ke-kanan, sekalipun kerabat aksaranya tidak.
+    direction: "ltr" as const,
+    canonicalNumbering: true,
+  }));
+}
+
+/**
+ * Satu jilid, seribu empat ratus tiga puluh ang. Dibentuk sebagai satu kitab
+ * dengan angnya sebagai bab, karena begitulah orang menyebut letak sebuah baris
+ * di dalamnya — "ang 917", bukan bab sekian dari bagian sekian.
+ */
+async function sikhBooks(): Promise<BookSummary[]> {
+  return [{ id: "ggs", name: "Sri Guru Granth Sahib", chapters: ANG }];
+}
+
+async function sikhPassage(translationId: string, ang: number): Promise<Passage> {
+  if (!Number.isInteger(ang) || ang < 1 || ang > ANG) {
+    throw new Error("Ang di luar jangkauan.");
+  }
+
+  const versi = GURBANI_VERSIONS.find((v) => v.id === translationId);
+  if (!versi) throw new Error("Terjemahan tidak dikenal.");
+
+  const res = await ambil(`${GURBANI}/ang/${ang}`);
+  if (!res.ok) throw new Error(`Ang tidak ditemukan (${res.status}).`);
+
+  const data = (await res.json()) as { page?: { line?: BarisGurbani }[] };
+
+  const verses: Verse[] = (data.page ?? [])
+    .map((p, i) => ({
+      n: i + 1,
+      text: stripMarkup(p.line ? versi.baca(p.line) : "")
+        .replace(/\s+/g, " ")
+        .trim(),
+    }))
+    .filter((v) => v.text.length > 0);
+
+  if (verses.length === 0) throw new Error("Ang kosong pada versi ini.");
+
+  return {
+    traditionId: "sikh",
+    translationId,
+    translationName: versi.name,
+    bookId: "ggs",
+    bookName: "Sri Guru Granth Sahib",
+    chapter: ang,
+    verses,
+    wordCount: countWords(verses),
+    direction: "ltr",
+    attribution: atribusi("sikh"),
+  };
+}
+
+// ---------------------------------------------------------------------------
 // Muka tunggal
 // ---------------------------------------------------------------------------
 
@@ -506,6 +876,12 @@ export async function listTranslations(tradition: TraditionId): Promise<Translat
       return islamTranslations();
     case "buddhist":
       return buddhistTranslations();
+    case "jewish":
+      return jewishTranslations();
+    case "hindu":
+      return hinduTranslations();
+    case "sikh":
+      return sikhTranslations();
   }
 }
 
@@ -520,6 +896,12 @@ export async function listBooks(
       return islamBooks();
     case "buddhist":
       return buddhistBooks();
+    case "jewish":
+      return jewishBooks();
+    case "hindu":
+      return hinduBooks();
+    case "sikh":
+      return sikhBooks();
   }
 }
 
@@ -536,6 +918,12 @@ export async function getPassage(
       return islamPassage(translationId, Number(bookId));
     case "buddhist":
       return buddhistPassage(translationId, Number(bookId));
+    case "jewish":
+      return jewishPassage(translationId, bookId, chapter);
+    case "hindu":
+      return hinduPassage(translationId, Number(bookId));
+    case "sikh":
+      return sikhPassage(translationId, chapter);
   }
 }
 
@@ -546,7 +934,7 @@ export interface CorpusCount {
 }
 
 /**
- * Menghitung cakupan nyata dari ketiga sumber.
+ * Menghitung cakupan nyata dari seluruh sumber.
  *
  * Angka ini muncul di halaman muka. Menuliskannya tangan berarti ia akan
  * meleset diam-diam setiap kali sumbernya bertambah, dan angka yang meleset di
@@ -576,6 +964,20 @@ export async function countCorpus(): Promise<CorpusCount> {
   }
 
   return { translations, languages: languages.size, traditions: TRADITIONS.length };
+}
+
+/**
+ * Apakah teks ini menyebut salah satu tradisi yang benar-benar ada.
+ *
+ * Diturunkan dari `TRADITIONS`, bukan ditulis ulang sebagai daftar di tiap rute.
+ * Daftar yang disalin akan tertinggal diam-diam begitu ada tradisi baru, dan
+ * bentuk kegagalannya adalah tradisi yang tampil di menu tetapi ditolak saat
+ * dibuka — persis jenis cacat yang paling lama tidak ketahuan.
+ */
+export function isTradition(value: unknown): value is TraditionId {
+  return (
+    typeof value === "string" && TRADITIONS.some((t) => t.id === value)
+  );
 }
 
 /** Pengenal stabil satu perikop; dipakai sebagai kunci sesi dan di attestation. */

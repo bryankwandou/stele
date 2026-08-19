@@ -6,7 +6,7 @@ import { Source_Serif_4, Inter } from "next/font/google";
 import { Providers } from "./providers";
 import { WalletButton } from "@/components/WalletButton";
 import { LangToggle } from "@/components/LangToggle";
-import { copy } from "@/lib/i18n";
+import { copy, direction } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 import "./globals.css";
 
@@ -47,7 +47,11 @@ export default async function RootLayout({
   ];
 
   return (
-    <html lang={locale} className={`${serif.variable} ${sans.variable} h-full`}>
+    <html
+      lang={locale}
+      dir={direction(locale)}
+      className={`${serif.variable} ${sans.variable} h-full`}
+    >
       <body className="flex min-h-full flex-col antialiased">
         <Providers locale={locale}>
           <header className="border-b border-rule">

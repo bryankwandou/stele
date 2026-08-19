@@ -5,6 +5,7 @@ import { useCopy } from "@/app/providers";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { BookSummary, TranslationSummary, TraditionId } from "@/lib/corpus";
+import type { Copy } from "@/lib/i18n/types";
 
 /**
  * Pemilih terjemahan, kitab, dan pasal.
@@ -141,11 +142,7 @@ export function Picker({
 
         <label className="space-y-1.5">
           <span className="text-sm text-ink-soft">
-            {tradition === "islam"
-              ? c.picker.surah
-              : tradition === "buddhist"
-                ? c.picker.vagga
-                : c.picker.book}
+            {labelKitab(c, tradition)}
           </span>
           <select
             className={fieldClass}
@@ -167,7 +164,7 @@ export function Picker({
 
         {maxChapter > 1 && (
           <label className="space-y-1.5">
-            <span className="text-sm text-ink-soft">{c.picker.chapter}</span>
+            <span className="text-sm text-ink-soft">{labelBab(c, tradition)}</span>
             <select
               className={fieldClass}
               value={chapter}
@@ -192,4 +189,33 @@ export function Picker({
       </button>
     </div>
   );
+}
+
+/**
+ * Setiap arsip menyebut satuannya sendiri: surah, vagga, traktat, adhyaya.
+ * Menyebutnya "kitab" untuk semuanya akan terbaca salah bagi orang yang paling
+ * mengenal teksnya, jadi satuannya dinamai apa adanya. Yang tidak disebut di
+ * sini memakai kata umum.
+ */
+function labelKitab(c: Copy, tradition: TraditionId): string {
+  switch (tradition) {
+    case "islam":
+      return c.picker.surah;
+    case "buddhist":
+      return c.picker.vagga;
+    case "jewish":
+      return c.picker.tractate;
+    case "hindu":
+      return c.picker.adhyaya;
+    default:
+      return c.picker.book;
+  }
+}
+
+/**
+ * Guru Granth Sahib tidak dibagi bab; letaknya disebut dengan nomor ang, dan
+ * di situlah pemilih keduanya berdiri.
+ */
+function labelBab(c: Copy, tradition: TraditionId): string {
+  return tradition === "sikh" ? c.picker.ang : c.picker.chapter;
 }

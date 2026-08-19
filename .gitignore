@@ -31,3 +31,5 @@ Thumbs.db
 *.tsbuildinfo
 next-env.d.ts
 video/*.log
+
+.vercel
