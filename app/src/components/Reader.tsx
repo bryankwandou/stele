@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import type { Passage } from "@/lib/corpus";
 import { submitClaim, type Attestation } from "@/lib/claim";
+import { ReadingProgress } from "./ReadingProgress";
 
 /**
  * Pembaca.
@@ -203,6 +204,8 @@ export function Reader({ passage }: { passage: Passage }) {
       {!publicKey && (
         <p className="max-w-lg rounded-lg border border-rule bg-paper-raised p-5 text-sm leading-relaxed text-ink-soft">{c.reader.noWallet}</p>
       )}
+
+      <ReadingProgress />
 
       <article className="passage space-y-4" dir={passage.direction}>
         {passage.verses.map((verse) => (

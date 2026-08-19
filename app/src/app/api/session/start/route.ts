@@ -4,7 +4,7 @@ import bs58 from "bs58";
 import { PublicKey } from "@solana/web3.js";
 
 import { sql, upsertReader, countedToday } from "@/lib/db";
-import { getPassage, passageId, type TraditionId } from "@/lib/corpus";
+import { getPassage, passageId, type TraditionId, isTradition } from "@/lib/corpus";
 import { buildAnchor, localDay, DAILY_CAP } from "@/lib/attention";
 
 export const runtime = "nodejs";
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Alamat dompet tidak sah." }, { status: 400 });
   }
 
-  if (!["christian", "islam", "buddhist"].includes(tradition)) {
+  if (!isTradition(tradition)) {
     return NextResponse.json({ error: "Tradisi tidak dikenal." }, { status: 400 });
   }
 

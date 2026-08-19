@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { listBooks, type TraditionId } from "@/lib/corpus";
+import { isTradition, listBooks, type TraditionId } from "@/lib/corpus";
 
 export const revalidate = 3600;
 
@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   const tradition = searchParams.get("tradition") as TraditionId | null;
   const translation = searchParams.get("translation") ?? "";
 
-  if (!tradition || !["christian", "islam", "buddhist"].includes(tradition)) {
+  if (!isTradition(tradition)) {
     return NextResponse.json({ error: "Tradisi tidak dikenal." }, { status: 400 });
   }
 

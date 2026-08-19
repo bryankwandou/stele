@@ -44,6 +44,22 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
+/* Inter dan Source Serif tidak memuat huruf Arab maupun Han. Tanpa cadangan
+   yang disebut namanya, peramban memilih sendiri dan hasilnya berbeda-beda di
+   tiap sistem; menyebutnya di sini membuat antarmuka Arab dan Mandarin tetap
+   terbaca dan tetap sepadan tingginya dengan teks Latin di sekitarnya. */
+:root:lang(ar) body,
+[lang="ar"] {
+  font-family: var(--font-sans), "Segoe UI", "Noto Naskh Arabic", "Geeza Pro",
+    "Traditional Arabic", system-ui, sans-serif;
+}
+
+:root:lang(zh) body,
+[lang="zh"] {
+  font-family: var(--font-sans), "Microsoft YaHei", "PingFang SC",
+    "Noto Sans CJK SC", "Source Han Sans SC", system-ui, sans-serif;
+}
+
 /* Teks perikop. Ukuran dan jarak baris dipilih untuk membaca lama,
    bukan untuk memadatkan sebanyak mungkin ke dalam layar. */
 .passage {
@@ -80,11 +96,41 @@ body {
   padding: 0 0.9rem !important;
 }
 
+/* Gerak.
+
+   Halaman ini dipakai untuk membaca lama, jadi geraknya sedikit dan pendek.
+   Yang bergerak hanya saat halaman pertama muncul dan saat sesuatu benar-benar
+   berubah; tidak ada yang bergerak terus-menerus di belakang teks, karena
+   gerak yang berulang di tepi mata justru menarik perhatian keluar dari
+   kalimat yang sedang dibaca. Semuanya berhenti total bila sistem pembaca
+   meminta gerak dikurangi. */
+
+/* Garis kemajuan baca. Lebarnya diatur dari komponen lewat --progress,
+   sehingga tidak ada tata letak yang dihitung ulang saat halaman digulir. */
+.progress-rail {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: 2px;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.progress-rail::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: var(--progress, 0%);
+  background: var(--accent);
+  transition: width 0.15s linear;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     transition-duration: 0.01ms !important;
   }
 }

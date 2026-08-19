@@ -96,12 +96,12 @@ export default async function LeaderboardPage() {
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-sm">
                 <thead>
-                  <tr className="border-b border-rule text-left text-ink-soft">
+                  <tr className="border-b border-rule text-start text-ink-soft">
                     <th className="py-2 font-normal">#</th>
                     <th className="py-2 font-normal">{c.board.colReader}</th>
-                    <th className="py-2 text-right font-normal">{c.board.colStreak}</th>
-                    <th className="py-2 text-right font-normal">{c.board.colBest}</th>
-                    <th className="py-2 text-right font-normal">{c.board.colPassages}</th>
+                    <th className="py-2 text-end font-normal">{c.board.colStreak}</th>
+                    <th className="py-2 text-end font-normal">{c.board.colBest}</th>
+                    <th className="py-2 text-end font-normal">{c.board.colPassages}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -111,13 +111,13 @@ export default async function LeaderboardPage() {
                       <td className="py-2.5 font-mono text-xs">
                         {row.wallet.slice(0, 4)}…{row.wallet.slice(-4)}
                       </td>
-                      <td className="py-2.5 text-right tabular-nums">
+                      <td className="py-2.5 text-end tabular-nums">
                         {row.streak_current} {c.board.days}
                       </td>
-                      <td className="py-2.5 text-right tabular-nums text-ink-soft">
+                      <td className="py-2.5 text-end tabular-nums text-ink-soft">
                         {row.streak_best}
                       </td>
-                      <td className="py-2.5 text-right tabular-nums text-ink-soft">
+                      <td className="py-2.5 text-end tabular-nums text-ink-soft">
                         {row.total_passages}
                       </td>
                     </tr>
