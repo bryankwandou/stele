@@ -731,10 +731,26 @@ async function hinduPassage(translationId: string, adhyaya: number): Promise<Pas
  * akar. Nomornya sudah dibawa oleh urutan larik, dan menampilkannya dua kali
  * membuat syair terbaca seperti keluaran mentah.
  */
+/**
+ * Angka, dalam angka Arab maupun Devanagari. Arsipnya memakai keduanya: teks
+ * akar Sanskertanya menomori syair dengan ०–९, sementara sebagian penerjemah
+ * Hindi dan Inggris memakai 0–9 di baris yang sama bentuknya.
+ */
+const ANGKA = String.raw`[0-9\u0966-\u096F]`;
+
+/** Danda tunggal, danda ganda, dan garis tegak biasa — ketiganya dipakai. */
+const DANDA = String.raw`[\u0964\u0965|]{1,2}`;
+
+/** "।।2.47।।", "||२-१||", "॥18-78॥" — penanda yang sama dengan tiga wajah. */
+const PENANDA = String.raw`${DANDA}\s*${ANGKA}+[.\-\u0964]${ANGKA}+\s*${DANDA}`;
+
+const DI_DEPAN = new RegExp(String.raw`^\s*${PENANDA}\s*`, "u");
+const DI_EKOR = new RegExp(String.raw`\s*${PENANDA}\s*$`, "u");
+
 function bersihkanSyair(teks: string): string {
   return teks
-    .replace(/^[।|]{1,2}\s*\d+[.\-]\d+\s*[।|]{1,2}\s*/u, "")
-    .replace(/\s*[।|]{1,2}\s*\d+[.\-]\d+\s*[।|]{1,2}\s*$/u, "")
+    .replace(DI_DEPAN, "")
+    .replace(DI_EKOR, "")
     .replace(/\s+/g, " ")
     .trim();
 }
