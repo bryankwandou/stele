@@ -102,6 +102,19 @@ export function traditionCopy(
   };
 }
 
+/**
+ * Kalimat lisensi satu arsip dalam bahasa pembaca.
+ *
+ * Nama arsip dan alamatnya tetap tinggal di lapisan korpus — keduanya nama
+ * diri, dan menerjemahkannya justru memutus kredit yang disyaratkan lisensi.
+ * Kalimat lisensinya bukan nama diri, jadi ia pindah ke kamus. Selama ia masih
+ * ikut duduk di korpus, halaman berbahasa apa pun menutup dirinya dengan satu
+ * baris Indonesia.
+ */
+export function licenseCopy(c: Copy, tradition: TraditionId): string {
+  return c.licenses[tradition];
+}
+
 /** Pemisah ribuan mengikuti bahasa pembaca, bukan mengikuti mesin. */
 export function formatNumber(value: number, locale: Locale): string {
   return value.toLocaleString(LOCALE_INFO[locale].tag);

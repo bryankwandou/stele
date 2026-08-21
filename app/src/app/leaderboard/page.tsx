@@ -61,7 +61,7 @@ export default async function LeaderboardPage() {
   ];
 
   return (
-    <main className="mx-auto max-w-2xl space-y-14 px-6 py-16">
+    <div className="max-w-3xl space-y-14">
       <Reveal>
         <header className="space-y-3">
           <h1 className="font-serif text-4xl">{c.board.title}</h1>
@@ -130,6 +130,6 @@ export default async function LeaderboardPage() {
           <p className="text-sm leading-relaxed text-ink-soft">{c.board.footnote}</p>
         </section>
       </Reveal>
-    </main>
+    </div>
   );
 }

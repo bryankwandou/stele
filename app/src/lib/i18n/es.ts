@@ -70,6 +70,20 @@ export const es: Copy = {
     sikhBlurb:
       "1430 angs en escritura gurmuji, junto a sus traducciones, desde el archivo de GurbaniNow.",
   },
+  licenses: {
+    christian:
+      "Dominio público y licencias abiertas, según la traducción.",
+    islam:
+      "Creative Commons Attribution 3.0. Hay que nombrar y enlazar la fuente.",
+    buddhist:
+      "CC0 y CC BY, según la traducción.",
+    jewish:
+      "Dominio público, CC0 y CC BY, según la versión. Hay que nombrar y enlazar la fuente.",
+    hindu:
+      "Licencia MIT. Hay que nombrar y enlazar la fuente.",
+    sikh:
+      "Licencia MIT, base de datos Shabad OS. Hay que nombrar y enlazar la fuente.",
+  },
   how: {
     title: "Cómo funciona",
     metaTitle: "Cómo funciona — Stele",
@@ -156,6 +170,7 @@ export const es: Copy = {
     adhyaya: "Capítulo (adhyaya)",
     ang: "Ang",
     chapter: "Capítulo",
+    open: "Abrir la lectura",
     numberingNote:
       "El archivo guarda esta traducción como un bloque entero por vagga, no verso por verso. El número junto a cada línea es el orden en que aparece, no el número de verso del Dhammapada. Las traducciones que encabezan la lista sí traen la numeración estándar.",
   },

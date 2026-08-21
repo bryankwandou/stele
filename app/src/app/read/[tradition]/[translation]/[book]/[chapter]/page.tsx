@@ -40,8 +40,8 @@ export default async function PassagePage({
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-12">
+    <div className="max-w-3xl">
       <Reader passage={passage} />
-    </main>
+    </div>
   );
 }

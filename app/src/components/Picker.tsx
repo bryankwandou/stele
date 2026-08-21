@@ -185,7 +185,7 @@ export function Picker({
         disabled={!ready}
         className="rounded-md bg-ink px-5 py-2.5 text-sm text-paper transition-opacity hover:opacity-90 disabled:opacity-40"
       >
-        Buka bacaan
+        {c.picker.open}
       </button>
     </div>
   );
