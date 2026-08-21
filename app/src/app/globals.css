@@ -105,6 +105,48 @@ body {
    kalimat yang sedang dibaca. Semuanya berhenti total bila sistem pembaca
    meminta gerak dikurangi. */
 
+/* Lengkung dan tempo.
+
+   Ditulis sekali di sini supaya seluruh halaman bergerak dengan tangan yang
+   sama. Lengkung keluar dipakai untuk hampir semuanya: cepat di awal, lalu
+   melambat mendekati tempatnya, yang terbaca sebagai benda yang berhenti
+   karena sampai, bukan karena waktunya habis. */
+:root {
+  --keluar: cubic-bezier(0.22, 1, 0.36, 1);
+  --lembut: cubic-bezier(0.16, 1, 0.3, 1);
+  --tempo-pendek: 240ms;
+  --tempo-sedang: 420ms;
+  --tempo-panjang: 620ms;
+}
+
+/* Gerak sebagai penambah, bukan syarat.
+
+   Isi halaman tampil apa adanya sampai ada skrip yang menyalakan geraknya.
+   Urutannya sengaja begitu. Ditulis terbalik — sembunyi dulu, tampil setelah
+   skrip berjalan — satu galat skrip sudah cukup untuk meninggalkan halaman
+   kosong, dan halaman ini isinya teks. Teks yang hanya muncul bila skrip
+   berhasil bukan teks yang bisa diandalkan.
+
+   Penanda `data-motion` dipasang di kepala dokumen sebelum lukisan pertama,
+   jadi tidak ada kedipan antara keadaan tampil dan keadaan tersembunyi. */
+.reveal {
+  opacity: 1;
+  transform: none;
+}
+
+[data-motion="on"] .reveal {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+[data-motion="on"] .reveal[data-shown="true"] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--tempo-panjang) var(--keluar) var(--reveal-delay, 0ms),
+    transform var(--tempo-panjang) var(--keluar) var(--reveal-delay, 0ms);
+}
+
 /* Garis kemajuan baca. Lebarnya diatur dari komponen lewat --progress,
    sehingga tidak ada tata letak yang dihitung ulang saat halaman digulir. */
 .progress-rail {

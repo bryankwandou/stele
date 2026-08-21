@@ -52,6 +52,7 @@ export const id = {
     claimP2:
       "Itu bukan bukti. Kami menyebutnya apa adanya, dan merancang seluruh sistemnya dengan asumsi bahwa pemeriksaan itu bisa dilewati.",
     claimLink: "Rincian lengkapnya",
+    slabAlt: "Lempeng batu berpahat; enam baris selesai, baris ketujuh masih separuh.",
   },
   traditions: {
     christian: "Alkitab",

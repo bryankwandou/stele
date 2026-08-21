@@ -52,6 +52,29 @@ export default async function RootLayout({
       dir={direction(locale)}
       className={`${serif.variable} ${sans.variable} h-full`}
     >
+      <head>
+        {/*
+          Menyalakan gerak sebelum halaman pertama kali dilukis.
+
+          Tanpa penanda ini, CSS tidak menyembunyikan apa pun dan seluruh isi
+          halaman tampil apa adanya — itu keadaan yang benar bagi pembaca tanpa
+          JavaScript, dan bagi siapa pun yang skripnya gagal termuat. Ditaruh di
+          kepala dokumen, bukan di komponen, supaya penandanya sudah ada sejak
+          lukisan pertama; dipasang belakangan, pembaca akan sempat melihat
+          isinya lalu melihatnya menghilang untuk muncul kembali.
+
+          Permintaan gerak yang dikurangi diperiksa di sini juga, bukan hanya di
+          CSS, supaya elemennya tidak pernah sempat berada dalam keadaan
+          transparan bagi orang yang memintanya.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches)" +
+              "document.documentElement.setAttribute('data-motion','on')}catch(e){}",
+          }}
+        />
+      </head>
       <body className="flex min-h-full flex-col antialiased">
         <Providers locale={locale}>
           <header className="border-b border-rule">

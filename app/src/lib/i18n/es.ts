@@ -48,6 +48,7 @@ export const es: Copy = {
     claimP2:
       "Eso no es una prueba. Lo decimos tal cual, y diseñamos todo el sistema asumiendo que esa verificación se puede burlar.",
     claimLink: "Los detalles completos",
+    slabAlt: "Una losa de piedra tallada; seis líneas terminadas, la séptima a medias.",
   },
   traditions: {
     christian: "La Biblia",
