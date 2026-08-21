@@ -46,6 +46,7 @@ export const zh: Copy = {
     claimP2:
       "这不是证明。我们如实说明，并且在设计整个系统时就假定这项检查是可以被绕过的。",
     claimLink: "完整细节",
+    slabAlt: "一块刊刻的石碑；六行已成，第七行才刻一半。",
   },
   traditions: {
     christian: "圣经",

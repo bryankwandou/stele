@@ -48,6 +48,7 @@ export const fr: Copy = {
     claimP2:
       "Ce n'est pas une preuve. Nous le disons tel quel, et nous avons conçu tout le système en supposant que cette vérification peut être contournée.",
     claimLink: "Le détail complet",
+    slabAlt: "Une dalle de pierre gravée ; six lignes achevées, la septième à moitié.",
   },
   traditions: {
     christian: "La Bible",

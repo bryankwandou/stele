@@ -48,6 +48,7 @@ export const en: Copy = {
     claimP2:
       "That is not proof. We say so plainly, and the whole system is designed assuming those checks can be beaten.",
     claimLink: "The full detail",
+    slabAlt: "A carved stone slab; six lines finished, the seventh still half cut.",
   },
   traditions: {
     christian: "The Bible",

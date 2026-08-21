@@ -4,6 +4,7 @@ import { countCorpus } from "@/lib/corpus";
 import { copy, LOCALES } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 import { Carving } from "@/components/Carving";
+import { Monolith } from "@/components/Monolith";
 import { Reveal } from "@/components/Reveal";
 import { Tally } from "@/components/Tally";
 
@@ -60,8 +61,12 @@ export default async function HomePage() {
           </div>
         </Reveal>
 
+        {/* Lempeng batu, dipahat di layar. Gambar diam yang lama dipakai
+            sebagai cadangan: bila peramban tidak punya WebGL atau konteksnya
+            dicabut di tengah jalan, yang tampil bukan lubang di tata letak
+            melainkan lempeng yang sama dalam dua dimensi. */}
         <Reveal delay={140} className="hidden justify-self-end sm:block">
-          <Carving />
+          <Monolith label={c.home.slabAlt} fallback={<Carving />} />
         </Reveal>
       </section>
 
