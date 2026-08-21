@@ -1,5 +1,6 @@
 "use client";
 
+import { licenseCopy } from "@/lib/i18n";
 import { useCopy } from "@/app/providers";
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -220,7 +221,7 @@ export function Reader({ passage }: { passage: Passage }) {
 
       <footer className="max-w-2xl space-y-4 border-t border-rule pt-6 text-sm text-ink-soft">
         <p>
-          {passage.attribution.label} · {passage.attribution.license}{" "}
+          {passage.attribution.label} · {licenseCopy(c, passage.traditionId)}{" "}
           <a className="underline" href={passage.attribution.href}>
             {c.reader.sourceLink}
           </a>

@@ -73,6 +73,25 @@ export const id = {
     sikhBlurb:
       "1.430 ang dalam aksara Gurmukhi, beserta terjemahannya, dari arsip GurbaniNow.",
   },
+
+  /**
+   * Lisensi tiap arsip, satu kalimat.
+   *
+   * Kalimat-kalimat ini dulu tinggal di `TRADITIONS` bersama alamat dan nama
+   * arsipnya. Nama arsip memang tidak diterjemahkan — ia nama diri — tetapi
+   * kalimat lisensinya ikut terbawa, sehingga pembaca berbahasa Inggris
+   * mendapat halaman Inggris yang menutup diri dengan satu baris Indonesia.
+   * Sekarang yang tinggal di lapisan korpus hanya nama dan alamat.
+   */
+  licenses: {
+    christian: "Domain publik dan lisensi terbuka, bervariasi per terjemahan.",
+    islam: "Creative Commons Attribution 3.0. Sumber wajib disebut dan ditautkan.",
+    buddhist: "CC0 dan CC BY, bervariasi per terjemahan.",
+    jewish:
+      "Domain publik, CC0, dan CC BY, bervariasi per versi. Sumber wajib disebut dan ditautkan.",
+    hindu: "Lisensi MIT. Sumber wajib disebut dan ditautkan.",
+    sikh: "Lisensi MIT, basis data Shabad OS. Sumber wajib disebut dan ditautkan.",
+  },
   how: {
     title: "Cara kerjanya",
     metaTitle: "Cara kerjanya — Stele",
@@ -157,6 +176,7 @@ export const id = {
     adhyaya: "Adhyaya",
     ang: "Ang",
     chapter: "Pasal",
+    open: "Buka bacaan",
     numberingNote:
       "Arsip menyimpan terjemahan ini sebagai satu blok utuh per vagga, bukan per syair. Nomor di samping baris adalah urutan tampil, bukan nomor syair Dhammapada. Terjemahan di urutan atas daftar punya penomoran baku.",
   },

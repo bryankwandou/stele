@@ -70,6 +70,20 @@ export const fr: Copy = {
     sikhBlurb:
       "1 430 angs en écriture gourmoukhî, avec leurs traductions, depuis les archives de GurbaniNow.",
   },
+  licenses: {
+    christian:
+      "Domaine public et licences ouvertes, selon la traduction.",
+    islam:
+      "Creative Commons Attribution 3.0. La source doit être nommée et liée.",
+    buddhist:
+      "CC0 et CC BY, selon la traduction.",
+    jewish:
+      "Domaine public, CC0 et CC BY, selon la version. La source doit être nommée et liée.",
+    hindu:
+      "Licence MIT. La source doit être nommée et liée.",
+    sikh:
+      "Licence MIT, base de données Shabad OS. La source doit être nommée et liée.",
+  },
   how: {
     title: "Fonctionnement",
     metaTitle: "Fonctionnement — Stele",
@@ -155,6 +169,7 @@ export const fr: Copy = {
     adhyaya: "Chapitre (adhyaya)",
     ang: "Ang",
     chapter: "Chapitre",
+    open: "Ouvrir la lecture",
     numberingNote:
       "Les archives conservent cette traduction en un seul bloc par vagga, et non stance par stance. Le numéro à côté de chaque ligne est l'ordre d'affichage, non le numéro de stance du Dhammapada. Les traductions en tête de liste portent, elles, la numérotation standard.",
   },

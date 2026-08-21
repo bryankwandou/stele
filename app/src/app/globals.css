@@ -1,33 +1,63 @@
 @import "tailwindcss";
 
-/* Palet kertas dan tinta.
-   Kontras sengaja tidak ekstrem: teks yang dibaca lama lebih nyaman pada
-   putih hangat daripada putih murni. */
+/* Batu, bukan kertas.
+
+   Palet yang lama bertumpu pada krem hangat dengan aksen cokelat — enak
+   dipandang, tetapi ia palet kertas, dan yang dijanjikan halaman ini adalah
+   lempeng pahat. Netralnya sekarang dimiringkan sedikit ke hijau-abu, arah
+   warna batu serpentin; satu-satunya nada hangat ditinggalkan untuk aksen,
+   yaitu oker yang dulu digosokkan ke dalam huruf yang sudah dipahat supaya
+   guratannya terbaca dari jauh. Ketegangan dingin-hangat itu yang membuat
+   aksen bekerja tanpa perlu dinaikkan terangnya. */
 :root {
-  --paper: #fbfaf7;
-  --paper-raised: #ffffff;
-  --ink: #1b1a17;
-  --ink-soft: #6b675e;
-  --rule: #e4e0d7;
-  --accent: #7a5c3e;
-  --accent-soft: #f0e9df;
+  --paper: #eceae2;
+  --paper-raised: #f7f6f1;
+  --paper-sunk: #e2e0d6;
+  --ink: #13150f;
+  --ink-soft: #56594c;
+  --rule: #d4d3c6;
+  --accent: #a75c1d;
+  --accent-soft: #ece2d3;
+
+  /* Alur pahat: garis terang di bibir atas, bayang di dalam cekungan. */
+  --cut-light: #ffffff;
+  --cut-shadow: #b9b7a8;
 }
 
+/* Tema gelap ditulis lewat token yang sama, bukan lewat aturan tersendiri,
+   supaya tidak ada satu warna pun yang hanya punya satu definisi. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #14130f;
-    --paper-raised: #1c1a16;
-    --ink: #ece7dc;
-    --ink-soft: #9a9285;
-    --rule: #2e2b25;
-    --accent: #c9a274;
-    --accent-soft: #262119;
+  :root:not([data-theme="light"]) {
+    --paper: #101109;
+    --paper-raised: #191b12;
+    --paper-sunk: #0a0b06;
+    --ink: #e9e7d9;
+    --ink-soft: #8d9081;
+    --rule: #2a2c22;
+    --accent: #d2883c;
+    --accent-soft: #221f16;
+    --cut-light: #33352a;
+    --cut-shadow: #060704;
   }
+}
+
+:root[data-theme="dark"] {
+  --paper: #101109;
+  --paper-raised: #191b12;
+  --paper-sunk: #0a0b06;
+  --ink: #e9e7d9;
+  --ink-soft: #8d9081;
+  --rule: #2a2c22;
+  --accent: #d2883c;
+  --accent-soft: #221f16;
+  --cut-light: #33352a;
+  --cut-shadow: #060704;
 }
 
 @theme inline {
   --color-paper: var(--paper);
   --color-paper-raised: var(--paper-raised);
+  --color-paper-sunk: var(--paper-sunk);
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
   --color-rule: var(--rule);
@@ -36,6 +66,7 @@
 
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
+  --font-cut: var(--font-cut);
 }
 
 body {
@@ -44,10 +75,9 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
-/* Inter dan Source Serif tidak memuat huruf Arab maupun Han. Tanpa cadangan
-   yang disebut namanya, peramban memilih sendiri dan hasilnya berbeda-beda di
-   tiap sistem; menyebutnya di sini membuat antarmuka Arab dan Mandarin tetap
-   terbaca dan tetap sepadan tingginya dengan teks Latin di sekitarnya. */
+/* Inter, Source Serif, dan Cinzel tidak memuat huruf Arab maupun Han. Tanpa
+   cadangan yang disebut namanya, peramban memilih sendiri dan hasilnya berbeda
+   di tiap sistem. */
 :root:lang(ar) body,
 [lang="ar"] {
   font-family: var(--font-sans), "Segoe UI", "Noto Naskh Arabic", "Geeza Pro",
@@ -60,8 +90,34 @@ body {
     "Noto Sans CJK SC", "Source Han Sans SC", system-ui, sans-serif;
 }
 
-/* Teks perikop. Ukuran dan jarak baris dipilih untuk membaca lama,
-   bukan untuk memadatkan sebanyak mungkin ke dalam layar. */
+/* Huruf pahat.
+
+   Cinzel digambar dari huruf kapital yang dipahat pada batu Romawi, jadi ia
+   memang bentuk yang sedang dibicarakan halaman ini, bukan sekadar serif yang
+   kebetulan tampak tua. Dipakai terbatas: lambang, kelas kata di atas judul,
+   dan angka. Kalimat panjang tetap milik Source Serif, yang memang digambar
+   untuk dibaca lama. */
+.cut {
+  font-family: var(--font-cut), var(--font-serif), Georgia, serif;
+  letter-spacing: 0.06em;
+}
+
+/* Kelas kata kecil di atas judul. */
+.eyebrow {
+  font-family: var(--font-cut), var(--font-sans), sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Angka yang berdiri berjajar harus selebar sama, kalau tidak barisnya
+   bergoyang saat nilainya berubah saat dihitung naik. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Teks perikop. Ukuran dan jarak baris dipilih untuk membaca lama. */
 .passage {
   font-family: var(--font-serif), Georgia, serif;
   font-size: 1.175rem;
@@ -83,6 +139,39 @@ body {
   user-select: none;
 }
 
+/* Guratan pahat sebagai pembatas.
+
+   Dua garis setebal satu piksel, satu terang satu gelap, bertumpuk. Yang
+   terbaca bukan garis melainkan celah: bibir atas menangkap cahaya, dasarnya
+   tinggal dalam bayang. Dipakai menggantikan `border-t` polos di batas antar
+   bagian. */
+.incise {
+  height: 2px;
+  background: linear-gradient(
+    to bottom,
+    var(--cut-shadow) 0 1px,
+    var(--cut-light) 1px 2px
+  );
+}
+
+/* Kartu yang terbaca sebagai bidang yang dipahat masuk, bukan kotak yang
+   ditempel di atas. Bayangnya di dalam, bukan di luar. */
+.slab {
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  box-shadow:
+    inset 0 1px 0 var(--cut-light),
+    inset 0 -1px 0 var(--cut-shadow);
+  transition:
+    border-color var(--tempo-pendek) var(--keluar),
+    transform var(--tempo-pendek) var(--keluar);
+}
+
+.slab:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
 /* Tombol dompet bawaan adapter memakai gaya ungu yang tidak cocok dengan
    halaman ini. Ditimpa seperlunya, tanpa mengubah perilakunya. */
 .wallet-adapter-button-trigger {
@@ -100,17 +189,8 @@ body {
 
    Halaman ini dipakai untuk membaca lama, jadi geraknya sedikit dan pendek.
    Yang bergerak hanya saat halaman pertama muncul dan saat sesuatu benar-benar
-   berubah; tidak ada yang bergerak terus-menerus di belakang teks, karena
-   gerak yang berulang di tepi mata justru menarik perhatian keluar dari
-   kalimat yang sedang dibaca. Semuanya berhenti total bila sistem pembaca
-   meminta gerak dikurangi. */
-
-/* Lengkung dan tempo.
-
-   Ditulis sekali di sini supaya seluruh halaman bergerak dengan tangan yang
-   sama. Lengkung keluar dipakai untuk hampir semuanya: cepat di awal, lalu
-   melambat mendekati tempatnya, yang terbaca sebagai benda yang berhenti
-   karena sampai, bukan karena waktunya habis. */
+   berubah; tidak ada yang bergerak terus-menerus di belakang teks. Semuanya
+   berhenti total bila sistem pembaca meminta gerak dikurangi. */
 :root {
   --keluar: cubic-bezier(0.22, 1, 0.36, 1);
   --lembut: cubic-bezier(0.16, 1, 0.3, 1);
@@ -122,13 +202,9 @@ body {
 /* Gerak sebagai penambah, bukan syarat.
 
    Isi halaman tampil apa adanya sampai ada skrip yang menyalakan geraknya.
-   Urutannya sengaja begitu. Ditulis terbalik — sembunyi dulu, tampil setelah
-   skrip berjalan — satu galat skrip sudah cukup untuk meninggalkan halaman
-   kosong, dan halaman ini isinya teks. Teks yang hanya muncul bila skrip
-   berhasil bukan teks yang bisa diandalkan.
-
-   Penanda `data-motion` dipasang di kepala dokumen sebelum lukisan pertama,
-   jadi tidak ada kedipan antara keadaan tampil dan keadaan tersembunyi. */
+   Ditulis terbalik — sembunyi dulu, tampil setelah skrip berjalan — satu galat
+   skrip sudah cukup untuk meninggalkan halaman kosong, dan halaman ini isinya
+   teks. */
 .reveal {
   opacity: 1;
   transform: none;
@@ -165,6 +241,14 @@ body {
   width: var(--progress, 0%);
   background: var(--accent);
   transition: width 0.15s linear;
+}
+
+/* Sasaran papan ketik harus terlihat. Cincinnya memakai aksen, bukan warna
+   bawaan peramban, supaya ia terbaca sebagai bagian dari halaman. */
+:where(a, button, summary, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {

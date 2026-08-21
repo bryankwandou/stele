@@ -26,8 +26,6 @@ export interface Attribution {
   label: string;
   /** Tautan balik. Sebagian lisensi mensyaratkan ini, bukan opsional. */
   href: string;
-  /** Ringkasan lisensi, ditampilkan apa adanya. */
-  license: string;
 }
 
 export interface Verse {
@@ -86,7 +84,6 @@ export const TRADITIONS: Tradition[] = [
     attribution: {
       label: "Free Use Bible API — AO Lab",
       href: "https://bible.helloao.org",
-      license: "Domain publik dan lisensi terbuka, bervariasi per terjemahan.",
     },
   },
   {
@@ -94,9 +91,8 @@ export const TRADITIONS: Tradition[] = [
     name: "Al-Qur'an",
     blurb: "Teks Arab beserta ratusan terjemahan dalam puluhan bahasa.",
     attribution: {
-      label: "Tanzil.net melalui quran-api",
+      label: "Tanzil.net · quran-api",
       href: "https://tanzil.net",
-      license: "Creative Commons Attribution 3.0. Sumber wajib disebut dan ditautkan.",
     },
   },
   {
@@ -106,7 +102,6 @@ export const TRADITIONS: Tradition[] = [
     attribution: {
       label: "SuttaCentral",
       href: "https://suttacentral.net",
-      license: "CC0 dan CC BY, bervariasi per terjemahan.",
     },
   },
   {
@@ -116,8 +111,6 @@ export const TRADITIONS: Tradition[] = [
     attribution: {
       label: "Sefaria",
       href: "https://www.sefaria.org",
-      license:
-        "Domain publik, CC0, dan CC BY, bervariasi per versi. Sumber wajib disebut dan ditautkan.",
     },
   },
   {
@@ -128,7 +121,6 @@ export const TRADITIONS: Tradition[] = [
     attribution: {
       label: "Vedic Scriptures",
       href: "https://vedicscriptures.github.io",
-      license: "Lisensi MIT. Sumber wajib disebut dan ditautkan.",
     },
   },
   {
@@ -139,7 +131,6 @@ export const TRADITIONS: Tradition[] = [
     attribution: {
       label: "GurbaniNow",
       href: "https://gurbaninow.com",
-      license: "Lisensi MIT, basis data Shabad OS. Sumber wajib disebut dan ditautkan.",
     },
   },
 ];
@@ -277,7 +268,7 @@ async function christianPassage(
 }
 
 // ---------------------------------------------------------------------------
-// Islam — quran-api melalui jsDelivr, bersumber dari Tanzil
+// Islam — quran-api lewat jsDelivr, bersumber dari Tanzil
 // ---------------------------------------------------------------------------
 
 const QURAN = "https://cdn.jsdelivr.net/gh/fawazahmed0/quran-api@1";

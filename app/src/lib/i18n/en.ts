@@ -69,6 +69,20 @@ export const en: Copy = {
     sikhBlurb:
       "1,430 angs in Gurmukhi script, alongside their translations, from the GurbaniNow archive.",
   },
+  licenses: {
+    christian:
+      "Public domain and open licences, varying by translation.",
+    islam:
+      "Creative Commons Attribution 3.0. The source must be named and linked.",
+    buddhist:
+      "CC0 and CC BY, varying by translation.",
+    jewish:
+      "Public domain, CC0, and CC BY, varying by version. The source must be named and linked.",
+    hindu:
+      "MIT licence. The source must be named and linked.",
+    sikh:
+      "MIT licence, Shabad OS database. The source must be named and linked.",
+  },
   how: {
     title: "How it works",
     metaTitle: "How it works — Stele",
@@ -153,6 +167,7 @@ export const en: Copy = {
     adhyaya: "Chapter (adhyaya)",
     ang: "Ang",
     chapter: "Chapter",
+    open: "Open the reading",
     numberingNote:
       "The archive holds this translation as one block per vagga rather than per verse. The number beside each line is its display order, not the Dhammapada verse number. Translations higher up the list carry the standard numbering.",
   },

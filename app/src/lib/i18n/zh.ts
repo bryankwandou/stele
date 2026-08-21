@@ -63,6 +63,20 @@ export const zh: Copy = {
     sikh: "古鲁·格兰特·萨希卜",
     sikhBlurb: "1430 页古木基文，附各语言译文，取自 GurbaniNow 档案。",
   },
+  licenses: {
+    christian:
+      "公有领域及开放许可，随译本而异。",
+    islam:
+      "Creative Commons Attribution 3.0。须注明并链接来源。",
+    buddhist:
+      "CC0 与 CC BY，随译本而异。",
+    jewish:
+      "公有领域、CC0 与 CC BY，随版本而异。须注明并链接来源。",
+    hindu:
+      "MIT 许可证。须注明并链接来源。",
+    sikh:
+      "MIT 许可证，Shabad OS 数据库。须注明并链接来源。",
+  },
   how: {
     title: "运作方式",
     metaTitle: "运作方式 — Stele",
@@ -145,6 +159,7 @@ export const zh: Copy = {
     adhyaya: "章（adhyaya）",
     ang: "页（ang）",
     chapter: "章",
+    open: "开始阅读",
     numberingNote:
       "该档案将这个译本按品整块保存，而非逐偈保存。每行旁边的数字是显示顺序，不是《法句经》的偈颂编号。列表靠前的译本带有标准编号。",
   },

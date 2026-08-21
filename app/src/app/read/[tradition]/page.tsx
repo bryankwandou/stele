@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { TRADITIONS, listTranslations, listBooks, type TraditionId } from "@/lib/corpus";
 import { Picker } from "@/components/Picker";
-import { copy, traditionCopy } from "@/lib/i18n";
+import { copy, licenseCopy, traditionCopy } from "@/lib/i18n";
 import { getLocale } from "@/lib/locale";
 
 export default async function TraditionPage({
@@ -45,7 +45,7 @@ export default async function TraditionPage({
           <a className="underline" href={tradition.attribution.href}>
             {tradition.attribution.label}
           </a>
-          . {tradition.attribution.license}
+          . {licenseCopy(c, tradition.id)}
         </p>
       </header>
 

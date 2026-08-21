@@ -13,12 +13,12 @@ export default async function MePage() {
   const c = copy(await getLocale());
 
   return (
-    <main className="mx-auto max-w-2xl space-y-10 px-6 py-16">
+    <div className="max-w-3xl space-y-10">
       <header className="space-y-3">
         <h1 className="font-serif text-4xl">{c.me.title}</h1>
         <p className="leading-relaxed text-ink-soft">{c.me.lede}</p>
       </header>
       <Profile />
-    </main>
+    </div>
   );
 }
