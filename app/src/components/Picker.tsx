@@ -180,6 +180,19 @@ export function Picker({
         )}
       </div>
 
+      {/* Cuplikan pembuka.
+          Empat kotak dan satu tombol tidak memberi tahu apa pun tentang bunyi
+          terjemahan yang sedang dipilih. Untuk tradisi dengan seribu
+          terjemahan, satu-satunya cara mengetahuinya dulu adalah membuka
+          bacaannya lalu kembali — bolak-balik yang tidak ada ujungnya. */}
+      <Preview
+        tradition={tradition}
+        translationId={translationId}
+        bookId={bookId}
+        chapter={chapter}
+        ready={ready}
+      />
+
       <button
         onClick={open}
         disabled={!ready}
@@ -187,6 +200,106 @@ export function Picker({
       >
         {c.picker.open}
       </button>
+    </div>
+  );
+}
+
+type Cuplikan = {
+  verses: { n: number; text: string }[];
+  total: number;
+  words: number;
+  direction: "ltr" | "rtl";
+};
+
+/**
+ * Tiga ayat pembuka dari apa pun yang sedang dipilih.
+ *
+ * Tingginya dikunci walau isinya belum datang. Tanpa itu, kotak ini tumbuh dari
+ * nol setiap kali pilihan berubah dan mendorong tombol di bawahnya turun tepat
+ * saat tangan sedang menuju ke sana.
+ *
+ * Permintaannya dibatalkan lewat `AbortController` ketika pilihannya berganti
+ * lebih dulu. Pembaca yang menggulir cepat menyisakan sederet permintaan yang
+ * pulang tidak berurutan, dan yang terakhir tampil belum tentu yang terakhir
+ * diminta.
+ */
+function Preview({
+  tradition,
+  translationId,
+  bookId,
+  chapter,
+  ready,
+}: {
+  tradition: TraditionId;
+  translationId: string;
+  bookId: string;
+  chapter: number;
+  ready: boolean;
+}) {
+  const c = useCopy();
+  const [cuplikan, setCuplikan] = useState<Cuplikan | null>(null);
+  const [memuat, setMemuat] = useState(false);
+  const [gagal, setGagal] = useState(false);
+
+  useEffect(() => {
+    if (!ready) {
+      setCuplikan(null);
+      return;
+    }
+
+    const batal = new AbortController();
+    setMemuat(true);
+    setGagal(false);
+
+    const q = new URLSearchParams({
+      tradition,
+      translation: translationId,
+      book: bookId,
+      chapter: String(chapter),
+    });
+
+    fetch(`/api/preview?${q}`, { signal: batal.signal })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("gagal"))))
+      .then((d: Cuplikan) => {
+        setCuplikan(d);
+        setMemuat(false);
+      })
+      .catch((e) => {
+        if (e instanceof Error && e.name === "AbortError") return;
+        setGagal(true);
+        setMemuat(false);
+      });
+
+    return () => batal.abort();
+  }, [tradition, translationId, bookId, chapter, ready]);
+
+  if (!ready) return null;
+
+  return (
+    <div className="min-h-36 rounded-md bg-paper-sunk p-5">
+      {memuat && <p className="text-sm text-ink-soft">{c.picker.loading}</p>}
+
+      {/* Arsip sumber sesekali tidak menjawab. Itu bukan alasan untuk menahan
+          tombolnya: pembaca tetap boleh membuka bacaannya, dan halaman
+          bacaannya punya penanganan galatnya sendiri. */}
+      {gagal && <p className="text-sm text-ink-soft">{c.picker.previewFailed}</p>}
+
+      {cuplikan && !memuat && !gagal && (
+        <>
+          <p className="eyebrow">{c.picker.preview}</p>
+          <div className="passage mt-3 !text-base" dir={cuplikan.direction}>
+            {cuplikan.verses.map((v) => (
+              <p key={v.n} className="mt-2 first:mt-0">
+                <span className="verse-number">{v.n}</span>
+                {v.text}
+              </p>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-ink-soft">
+            {cuplikan.total} {c.reader.verses} · {cuplikan.words} {c.reader.words}
+          </p>
+        </>
+      )}
     </div>
   );
 }

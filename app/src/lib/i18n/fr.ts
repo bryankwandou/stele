@@ -170,6 +170,9 @@ export const fr: Copy = {
     ang: "Ang",
     chapter: "Chapitre",
     open: "Ouvrir la lecture",
+    preview: "Premières lignes",
+    previewFailed:
+      "L'aperçu ne peut pas être récupéré depuis l'archive pour le moment. La lecture s'ouvre quand même.",
     numberingNote:
       "Les archives conservent cette traduction en un seul bloc par vagga, et non stance par stance. Le numéro à côté de chaque ligne est l'ordre d'affichage, non le numéro de stance du Dhammapada. Les traductions en tête de liste portent, elles, la numérotation standard.",
   },
