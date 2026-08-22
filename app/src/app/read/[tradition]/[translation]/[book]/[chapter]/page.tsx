@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getPassage, TRADITIONS, type TraditionId } from "@/lib/corpus";
 import { Reader } from "@/components/Reader";
+import { Sebelah } from "@/components/Sebelah";
 
 // Teks diambil dari sumber publik dan disimpan di cache tepi selama satu jam.
 // Tidak ada salinan kitab yang disimpan di basis data kami.
@@ -42,6 +43,12 @@ export default async function PassagePage({
   return (
     <div className="max-w-3xl">
       <Reader passage={passage} />
+      <Sebelah
+        tradition={tradition as TraditionId}
+        translationId={decodeURIComponent(translation)}
+        bookId={decodeURIComponent(book)}
+        chapter={chapterNumber}
+      />
     </div>
   );
 }

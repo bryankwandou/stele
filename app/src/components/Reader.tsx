@@ -186,8 +186,8 @@ export function Reader({ passage }: { passage: Passage }) {
   return (
     <div className="space-y-10">
       <header className="max-w-2xl border-b border-rule pb-6">
-        <p className="text-sm text-ink-soft">{passage.translationName}</p>
-        <h1 className="mt-1 font-serif text-3xl">
+        <p className="eyebrow">{passage.translationName}</p>
+        <h1 className="mt-3 font-serif text-4xl leading-tight sm:text-5xl">
           {passage.bookName}
           {passage.traditionId === "christian" && ` ${passage.chapter}`}
         </h1>

@@ -177,6 +177,9 @@ export const fr: Copy = {
       "Les archives conservent cette traduction en un seul bloc par vagga, et non stance par stance. Le numéro à côté de chaque ligne est l'ordre d'affichage, non le numéro de stance du Dhammapada. Les traductions en tête de liste portent, elles, la numérotation standard.",
   },
   reader: {
+    nearby: "Passages voisins",
+    previous: "Précédent",
+    next: "Suivant",
     verses: "versets",
     words: "mots",
     readSuffix: "de lecture",

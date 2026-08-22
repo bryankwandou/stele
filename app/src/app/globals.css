@@ -130,6 +130,12 @@ body {
   line-height: 2.1;
 }
 
+/* Nomor ayat digantung di tepi, bukan disisipkan ke dalam kalimat.
+   Ditaruh sebagai superskrip di tengah baris, ia memaksa mata melompati satu
+   angka setiap kali satu ayat dimulai — persis pada titik kalimat barunya
+   dimulai. Digantung di luar blok teks, tepi kirinya tetap rata dan angkanya
+   ada di sana bila dicari. Di bawah lebar telepon tidak ada tepi untuk
+   digantungi, jadi ia kembali menjadi superskrip. */
 .verse-number {
   font-family: var(--font-sans), sans-serif;
   font-size: 0.7rem;
@@ -137,6 +143,37 @@ body {
   vertical-align: super;
   margin-inline-end: 0.3rem;
   user-select: none;
+}
+
+@media (min-width: 640px) {
+  /* Ruang untuk angka yang digantung. Tanpa ini angkanya jatuh di luar blok
+     dan terpotong tepi wadahnya. Lebar bacanya ikut ditambah sebanyak yang
+     dipakai, supaya jumlah huruf per baris tidak ikut menyusut. */
+  .passage {
+    padding-inline-start: 2.75rem;
+    max-width: calc(34rem + 2.75rem);
+  }
+
+  .passage p {
+    position: relative;
+  }
+
+  .passage .verse-number {
+    position: absolute;
+    inset-inline-start: -2.75rem;
+    top: 0.42rem;
+    width: 2.25rem;
+    margin-inline-end: 0;
+    text-align: end;
+    vertical-align: baseline;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Kepala halaman menempel di puncak layar, jadi tautan ke satu ayat akan
+   mendaratkan ayat itu tepat di baliknya. Jarak ini yang menahannya turun. */
+[id^="ayat-"] {
+  scroll-margin-top: 6rem;
 }
 
 /* Guratan pahat sebagai pembatas.

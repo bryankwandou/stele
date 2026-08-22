@@ -175,6 +175,9 @@ export const en: Copy = {
       "The archive holds this translation as one block per vagga rather than per verse. The number beside each line is its display order, not the Dhammapada verse number. Translations higher up the list carry the standard numbering.",
   },
   reader: {
+    nearby: "Nearby passages",
+    previous: "Previous",
+    next: "Next",
     verses: "verses",
     words: "words",
     readSuffix: "read",

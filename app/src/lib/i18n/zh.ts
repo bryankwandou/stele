@@ -167,6 +167,9 @@ export const zh: Copy = {
       "该档案将这个译本按品整块保存，而非逐偈保存。每行旁边的数字是显示顺序，不是《法句经》的偈颂编号。列表靠前的译本带有标准编号。",
   },
   reader: {
+    nearby: "相邻篇章",
+    previous: "上一篇",
+    next: "下一篇",
     verses: "节",
     words: "词",
     readSuffix: "已读",
