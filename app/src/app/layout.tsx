@@ -93,10 +93,17 @@ export default async function RootLayout({
       <body className="flex min-h-full flex-col antialiased">
         <Providers locale={locale}>
           <header className="sticky top-0 z-20 border-b border-rule bg-paper/85 backdrop-blur">
-            <div className="mx-auto flex w-full max-w-6xl items-center gap-6 px-6 py-4">
+            {/* Dua baris di telepon, satu baris begitu ada tempat.
+                Lambang, lima tautan, pengalih bahasa, dan tombol dompet tidak
+                muat berdampingan pada lebar telepon; dipaksa muat, semuanya
+                menyusut sampai tidak ada yang bisa disentuh dengan tepat.
+                Barisan tautannya sendiri bisa digeser mendatar, jadi tautan
+                terakhir tetap terjangkau tanpa perlu menu terlipat yang
+                menuntut satu ketukan tambahan hanya untuk berpindah halaman. */}
+            <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 px-6 py-3 sm:flex-nowrap sm:py-4">
               <Link
                 href="/"
-                className="cut flex shrink-0 items-center gap-2 text-lg"
+                className="cut mr-auto flex shrink-0 items-center gap-2 text-lg sm:mr-0"
               >
                 {/* Lambang dimuat sebagai gambar, bukan disisipkan sebagai SVG
                     sebaris, supaya peramban bisa menyinggahkannya sekali dan
@@ -104,9 +111,13 @@ export default async function RootLayout({
                 <img src="/mark.svg" alt="" width={26} height={26} aria-hidden />
                 Stele
               </Link>
-              <nav className="flex flex-1 flex-wrap gap-5 text-sm text-ink-soft">
+              <nav className="order-last -mx-6 flex w-[calc(100%+3rem)] gap-5 overflow-x-auto px-6 text-sm text-ink-soft sm:order-none sm:mx-0 sm:w-auto sm:flex-1 sm:flex-wrap sm:overflow-visible sm:px-0">
                 {nav.map((item) => (
-                  <Link key={item.href} href={item.href} className="hover:text-ink">
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="shrink-0 py-1 transition-colors hover:text-ink"
+                  >
                     {item.label}
                   </Link>
                 ))}

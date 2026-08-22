@@ -76,7 +76,7 @@ export default async function HomePage() {
             sebagai cadangan: bila peramban tidak punya WebGL atau konteksnya
             dicabut di tengah jalan, yang tampil bukan lubang di tata letak
             melainkan lempeng yang sama dalam dua dimensi. */}
-        <Reveal delay={140} className="hidden justify-self-center sm:block">
+        <Reveal delay={140} className="justify-self-center">
           <Monolith label={c.home.slabAlt} fallback={<Carving />} />
         </Reveal>
       </section>
@@ -87,11 +87,11 @@ export default async function HomePage() {
           supaya barisnya tidak bergoyang saat dihitung naik. */}
       <section>
         <div className="incise" />
-        <dl className="grid grid-cols-2 gap-x-8 gap-y-10 py-12 sm:grid-cols-5">
+        <dl className="grid grid-cols-3 gap-x-6 gap-y-10 py-12 sm:grid-cols-5">
           {facts.map((fact, i) => (
             <Reveal key={fact.label} delay={i * 80}>
               <dt className="sr-only">{fact.label}</dt>
-              <dd className="cut tabular text-4xl text-ink lg:text-5xl">
+              <dd className="cut tabular text-3xl text-ink sm:text-4xl lg:text-5xl">
                 <Tally value={fact.value} />
               </dd>
               <p aria-hidden className="mt-3 text-sm leading-snug text-ink-soft">

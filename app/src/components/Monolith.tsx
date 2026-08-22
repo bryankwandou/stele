@@ -483,6 +483,21 @@ export function Monolith({
     // terasa menempel di kursor, bukan berdiri di tempatnya sendiri.
     let sasaranX = 0;
     let sasaranY = 0;
+
+    /* Miring yang mengikuti gulir.
+       Sampai sekarang batunya hanya menanggapi tetikus, jadi di layar sentuh
+       — dan bagi siapa pun yang membaca tanpa menggerakkan tetikus — ia
+       hanya berayun sendiri dengan pola yang sama. Gulir adalah satu-satunya
+       masukan yang pasti dimiliki setiap pembaca. Nilainya diambil dari letak
+       batunya terhadap tengah layar, jadi ia berputar pelan sepanjang batu itu
+       melintas, lalu berhenti begitu ia lewat. */
+    let sasaranGulir = 0;
+    const bacaGulir = () => {
+      const kotak = luar.getBoundingClientRect();
+      const tengah = kotak.top + kotak.height / 2;
+      const bagian = tengah / window.innerHeight - 0.5;
+      sasaranGulir = Math.max(-1, Math.min(1, bagian)) * 0.26;
+    };
     let miringX = 0;
     let miringY = 0;
 
@@ -521,7 +536,7 @@ export function Monolith({
         // terus bergerak di alur dan batunya tidak terbaca sebagai gambar.
         const ayun = Math.sin(detik * 0.34) * 0.3 - 0.3;
         miringY += (sasaranY + ayun - miringY) * 0.055;
-        miringX += (sasaranX + Math.sin(detik * 0.23) * 0.045 - miringX) * 0.055;
+        miringX += (sasaranX + sasaranGulir + Math.sin(detik * 0.23) * 0.045 - miringX) * 0.055;
       }
 
       const model = putaran(miringY, miringX);
@@ -559,6 +574,13 @@ export function Monolith({
 
     luar.addEventListener("pointermove", gerakTetikus);
     luar.addEventListener("pointerleave", lepasTetikus);
+
+    // `passive` supaya pembacaan ini tidak pernah ikut menahan gulir. Nilainya
+    // hanya dicatat di sini; yang memakainya adalah bingkai berikutnya, jadi
+    // tidak ada tata letak yang dihitung ulang di tengah gulir.
+    bacaGulir();
+    window.addEventListener("scroll", bacaGulir, { passive: true });
+    window.addEventListener("resize", bacaGulir);
     malam.addEventListener("change", kirimWarna);
 
     const ukurUlang = new ResizeObserver(() => ukur());
@@ -581,6 +603,8 @@ export function Monolith({
       ukurUlang.disconnect();
       luar.removeEventListener("pointermove", gerakTetikus);
       luar.removeEventListener("pointerleave", lepasTetikus);
+      window.removeEventListener("scroll", bacaGulir);
+      window.removeEventListener("resize", bacaGulir);
       malam.removeEventListener("change", kirimWarna);
       el.removeEventListener("webglcontextlost", hilang);
       gl.deleteBuffer(bufPos);

@@ -178,6 +178,9 @@ export const es: Copy = {
       "El archivo guarda esta traducción como un bloque entero por vagga, no verso por verso. El número junto a cada línea es el orden en que aparece, no el número de verso del Dhammapada. Las traducciones que encabezan la lista sí traen la numeración estándar.",
   },
   reader: {
+    nearby: "Pasajes contiguos",
+    previous: "Anterior",
+    next: "Siguiente",
     verses: "versículos",
     words: "palabras",
     readSuffix: "de lectura",

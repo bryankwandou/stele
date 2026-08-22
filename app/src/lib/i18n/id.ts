@@ -184,6 +184,9 @@ export const id = {
       "Arsip menyimpan terjemahan ini sebagai satu blok utuh per vagga, bukan per syair. Nomor di samping baris adalah urutan tampil, bukan nomor syair Dhammapada. Terjemahan di urutan atas daftar punya penomoran baku.",
   },
   reader: {
+    nearby: "Perikop sebelumnya",
+    previous: "Sebelumnya",
+    next: "Berikutnya",
     verses: "ayat",
     words: "kata",
     readSuffix: "dibaca",
