@@ -171,6 +171,9 @@ export const es: Copy = {
     ang: "Ang",
     chapter: "Capítulo",
     open: "Abrir la lectura",
+    preview: "Primeras líneas",
+    previewFailed:
+      "Ahora mismo no se puede traer la vista previa del archivo. La lectura se abre igual.",
     numberingNote:
       "El archivo guarda esta traducción como un bloque entero por vagga, no verso por verso. El número junto a cada línea es el orden en que aparece, no el número de verso del Dhammapada. Las traducciones que encabezan la lista sí traen la numeración estándar.",
   },

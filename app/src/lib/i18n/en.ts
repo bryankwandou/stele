@@ -168,6 +168,9 @@ export const en: Copy = {
     ang: "Ang",
     chapter: "Chapter",
     open: "Open the reading",
+    preview: "Opening lines",
+    previewFailed:
+      "The preview cannot be fetched from the archive right now. The reading still opens.",
     numberingNote:
       "The archive holds this translation as one block per vagga rather than per verse. The number beside each line is its display order, not the Dhammapada verse number. Translations higher up the list carry the standard numbering.",
   },

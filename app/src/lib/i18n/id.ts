@@ -177,6 +177,9 @@ export const id = {
     ang: "Ang",
     chapter: "Pasal",
     open: "Buka bacaan",
+    preview: "Cuplikan pembuka",
+    previewFailed:
+      "Cuplikan tidak bisa diambil dari arsipnya sekarang. Bacaannya tetap bisa dibuka.",
     numberingNote:
       "Arsip menyimpan terjemahan ini sebagai satu blok utuh per vagga, bukan per syair. Nomor di samping baris adalah urutan tampil, bukan nomor syair Dhammapada. Terjemahan di urutan atas daftar punya penomoran baku.",
   },
